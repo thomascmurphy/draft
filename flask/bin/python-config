@@ -1,4 +1,4 @@
-#!/Users/thomasmurphy/Desktop/projects/draft_api/flask/bin/python
+#!/Users/thomascmurphy/Desktop/projects/draft/flask/bin/python
 
 import sys
 import getopt
