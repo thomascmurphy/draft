@@ -1,30 +1,11 @@
 #!flask/bin/python
-import os
-import sqlite3
+import app import app
 from flask import Flask, jsonify, json, abort, request, make_response, url_for, render_template
 
 from mtgsdk import Set
 from mtgsdk import Card
 
 import pdb
-
-app = Flask(__name__)
-# app.config.from_object(__name__)
-#
-# # Load default config and override config from an environment variable
-# app.config.update(dict(
-#     DATABASE=os.path.join(app.root_path, 'draft.db'),
-#     SECRET_KEY='development key',
-#     USERNAME='admin',
-#     PASSWORD='default'
-# ))
-# app.config.from_envvar('FLASKR_SETTINGS', silent=True)
-#
-# def connect_db():
-#     """Connects to the specific database."""
-#     rv = sqlite3.connect(app.config['DATABASE'])
-#     rv.row_factory = sqlite3.Row
-#     return rv
 
 
 
