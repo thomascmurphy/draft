@@ -9,6 +9,7 @@ drop table if exists cards;
 create table cards (
   id integer primary key autoincrement,
   name text not null,
+  image_url text not null,
   multiverse_id integer not null,
   cmc integer not null,
   color_identity text,
@@ -26,32 +27,32 @@ create table users (
   id integer primary key autoincrement,
   name text not null,
   'hash' text not null,
-  pod_id integer references pods
+  pod_id integer references pods on delete cascade
 );
 
 drop table if exists packs;
 create table packs (
   id integer primary key autoincrement,
-  set_id integer references sets,
-  user_id integer references users
+  set_id integer references sets on delete cascade,
+  user_id integer references users on delete cascade
 );
 
 drop table if exists pack_cards;
 create table pack_cards (
   id integer primary key autoincrement,
-  card_id integer references cards,
-  pack_id integer references packs
+  card_id integer references cards on delete cascade,
+  pack_id integer references packs on delete cascade
 );
 
 drop table if exists decks;
 create table decks (
   id integer primary key autoincrement,
-  user_id integer references users
+  user_id integer references users on delete cascade
 );
 
 drop table if exists deck_cards;
 create table deck_cards (
   id integer primary key autoincrement,
-  card_id integer references cards,
-  deck_id integer references decks
+  card_id integer references cards on delete cascade,
+  deck_id integer references decks on delete cascade
 );
