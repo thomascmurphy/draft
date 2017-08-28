@@ -22,8 +22,8 @@ create table pods (
   name text
 );
 
-drop table if exists users;
-create table users (
+drop table if exists players;
+create table players (
   id integer primary key autoincrement,
   name text not null,
   'hash' text not null,
@@ -34,7 +34,7 @@ drop table if exists packs;
 create table packs (
   id integer primary key autoincrement,
   set_id integer references sets on delete cascade,
-  user_id integer references users on delete cascade
+  player_id integer references players on delete cascade
 );
 
 drop table if exists pack_cards;
@@ -47,7 +47,7 @@ create table pack_cards (
 drop table if exists decks;
 create table decks (
   id integer primary key autoincrement,
-  user_id integer references users on delete cascade
+  player_id integer references players on delete cascade
 );
 
 drop table if exists deck_cards;

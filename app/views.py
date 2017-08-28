@@ -7,13 +7,77 @@ from mtgsdk import Card
 
 import pdb
 
-
-
+from models import *
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+#====SETS
+@app.route('/api/v1/sets', methods=['GET'])
+def api_get_sets():
+    sets = select_items('sets', ())
+    return jsonify(sets), 201
+
+#====PODS
+@app.route('/api/v1/pods', methods=['GET'])
+def api_get_pods():
+    return render_template('index.html')
+
+@app.route('/api/v1/pods', methods=['POST'])
+def api_post_pods():
+    return render_template('index.html')
+
+@app.route('/api/v1/pods', methods=['DELETE'])
+def api_delete_pods():
+    return render_template('index.html')
+
+#====PLAYERS
+@app.route('/api/v1/players', methods=['GET'])
+def api_get_players():
+    return render_template('index.html')
+
+@app.route('/api/v1/players', methods=['POST'])
+def api_post_players():
+    return render_template('index.html')
+
+@app.route('/api/v1/players', methods=['DELETE'])
+def api_delete_players():
+    return render_template('index.html')
+
+#====PACKS
+@app.route('/api/v1/packs', methods=['GET'])
+def api_get_packs():
+    return render_template('index.html')
+
+@app.route('/api/v1/packs', methods=['POST'])
+def api_post_packs():
+    return render_template('index.html')
+
+@app.route('/api/v1/packs', methods=['DELETE'])
+def api_delete_packs():
+    return render_template('index.html')
+
+#====DECKS
+@app.route('/api/v1/decks', methods=['GET'])
+def api_get_decks():
+    return render_template('index.html')
+
+@app.route('/api/v1/decks', methods=['POST'])
+def api_post_decks():
+    return render_template('index.html')
+
+@app.route('/api/v1/decks', methods=['DELETE'])
+def api_delete_decks():
+    return render_template('index.html')
+
+
+
+
+
+
+
 
 @app.route('/booster', methods=['GET'])
 def display_booster():
