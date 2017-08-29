@@ -4,12 +4,14 @@ from flask import Flask
 import config as Config
 from .common import constants as COMMON_CONSTANTS
 from .common import models
-from .api import sets
+from .api import players, pods, sets
 
 # For import *
 __all__ = ['create_app']
 
 DEFAULT_BLUEPRINTS = [
+   players,
+   pods,
    sets
 ]
 

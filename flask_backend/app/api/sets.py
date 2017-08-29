@@ -8,5 +8,6 @@ sets = Blueprint('sets', __name__, url_prefix='/api/v1/sets')
 
 @sets.route('/', methods=['GET'])
 def get_sets():
-    sets = select_items('sets', ())
-    return jsonify(sets), 201
+    sets = Set.all()
+    result_json = list(map(lambda set: {'name': set.name, 'code': set.code}, set))
+    return jsonify(result_json), 201
