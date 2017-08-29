@@ -6,4 +6,4 @@ https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-fla
 > flask/bin/pip install flask
 > flask/bin/pip install mtgsdk
 
->sqlite3 database.db < schema.sql 
+>sqlite3 api/db/draft.db < schema.sql

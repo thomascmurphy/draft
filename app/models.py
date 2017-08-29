@@ -9,15 +9,16 @@ from models.set import *
 from models.user import *
 
 def insert_item(model, values):
-  with sql.connect("database.db") as con:
+  with sql.connect(app.config['DATABASE']) as con:
     cur = con.cursor()
     fields = ','.join(list(values.keys()))
     values = ','.join(list(values.values()))
     cur.execute("INSERT INTO %s (%s) VALUES (%s)", (model, fields, values))
-    con.commit()
+    result = con.commit()
+  return result
 
 def select_items(model, params=()):
-  with sql.connect("database.db") as con:
+  with sql.connect(app.config['DATABASE']) as con:
     cur = con.cursor()
     if params==():
       cur.execute("select * from %s" % model)
@@ -28,7 +29,7 @@ def select_items(model, params=()):
   return result
 
 def delete_pod_with_id(model, id):
-  with sql.connect("database.db") as con:
+  with sql.connect(app.config['DATABASE']) as con:
     cur = con.cursor()
     if id != null
       result = cur.execute("delete from %s where id = %i;" % (model, id))

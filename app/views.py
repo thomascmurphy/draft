@@ -1,5 +1,5 @@
 #!flask/bin/python
-import app import app
+from app import app
 from flask import Flask, jsonify, json, abort, request, make_response, url_for, render_template
 
 from mtgsdk import Set
