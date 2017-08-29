@@ -1,12 +1,4 @@
 import sqlite3 as sql
-from models.card import *
-from models.deck_card import *
-from models.deck import *
-from models.pack_card import *
-from models.pack import *
-from models.pod import *
-from models.set import *
-from models.user import *
 
 def insert_item(model, values):
   with sql.connect(app.config['DATABASE']) as con:

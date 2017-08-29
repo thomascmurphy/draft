@@ -12,4 +12,4 @@ app.config.update(dict(
 ))
 app.config.from_envvar('DRAFT_SETTINGS', silent=True)
 
-from app import views, models
+#from app import views, models

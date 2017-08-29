@@ -2,8 +2,15 @@
 
 https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 
-> virtualenv flask
-> flask/bin/pip install flask
-> flask/bin/pip install mtgsdk
+> virtualenv .pyenv
+$ source .pyenv/bin/activate
+$ pip install Flask
+$ pip freeze > requirements.txt
+$ cat requirements.txt
 
->sqlite3 api/db/draft.db < schema.sql
+
+
+> .pyenv/bin/pip install flask
+> .pyenv/bin/pip install mtgsdk
+
+> sqlite3 app/db/draft.db < app/db/schema.sql
