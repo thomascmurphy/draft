@@ -1,7 +1,8 @@
 import sqlite3 as sql
+from flask import current_app
 
 def insert_item(model, values):
-  with sql.connect(app.config['DATABASE']) as con:
+  with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
     fields = ','.join(list(values.keys()))
     values = ','.join(list(values.values()))
@@ -10,10 +11,10 @@ def insert_item(model, values):
   return result
 
 def select_items(model, params=()):
-  with sql.connect(app.config['DATABASE']) as con:
+  with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
     if params==():
-      cur.execute("select * from %s" % model)
+      result = cur.execute("select * from %s" % model)
     else:
       query = "select * from %s where " % model
       query += ' & '.join(params)
@@ -21,8 +22,8 @@ def select_items(model, params=()):
   return result
 
 def delete_item_with_id(model, id):
-  with sql.connect(app.config['DATABASE']) as con:
+  with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
-    if id != null
+    if id != null:
       result = cur.execute("delete from %s where id = %i;" % (model, id))
   return result

@@ -1,5 +1,5 @@
 import os
-from common.constants import INSTANCE_FOLDER_PATH
+from .common.constants import INSTANCE_FOLDER_PATH
 
 class BaseConfig(object):
 
@@ -20,10 +20,6 @@ class DefaultConfig(BaseConfig):
 
    # Statement for enabling the development environment
    DEBUG = True
-
-   DATABASE = os.path.join(app.root_path, 'db/draft.db'),
-   USERNAME='admin',
-   PASSWORD='default'
 
    # Secret key for signing cookies
    SECRET_KEY = 'development key'

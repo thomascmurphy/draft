@@ -1,6 +1,6 @@
 # Virtualenv
 flask/
-pyenv/
+.pyenv/
 
 # Ignore the SQLite database.
 /app/db/*.db

@@ -30,7 +30,7 @@ create table packs (
   id integer primary key autoincrement,
   set_id integer references sets on delete cascade,
   player_id integer references players on delete cascade,
-  order integer
+  'order' integer
 );
 
 drop table if exists decks;

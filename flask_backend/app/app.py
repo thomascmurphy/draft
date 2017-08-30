@@ -1,9 +1,9 @@
 import os
 from flask import Flask
 
-import config as Config
+from . import config as Config
 from .common import constants as COMMON_CONSTANTS
-from .common import models
+#import pdb
 from .api import players, pods, sets
 
 # For import *
@@ -25,6 +25,7 @@ def create_app(config=None, app_name=None, blueprints=None):
 
    app = Flask(app_name, instance_path=COMMON_CONSTANTS.INSTANCE_FOLDER_PATH, instance_relative_config=True)
    configure_app(app, config)
+   configure_db(app)
    configure_hook(app)
    configure_blueprints(app, blueprints)
    configure_extensions(app)
@@ -45,6 +46,13 @@ def configure_app(app, config=None):
    # get mode from os environment
    application_mode = os.getenv('APPLICATION_MODE', 'LOCAL')
    app.config.from_object(Config.get_config(application_mode))
+
+def configure_db(app):
+  app.config.update(dict(
+    DATABASE=os.path.join(app.root_path, 'db/draft.db'),
+    USERNAME='admin',
+    PASSWORD='default'
+  ))
 
 def configure_extensions(app):
    pass
