@@ -6,7 +6,8 @@ create table cards (
   multiverse_id integer not null,
   cmc integer not null,
   color_identity text,
-  'set' text
+  set_code text
+  unique(multiverse_id)
 );
 
 drop table if exists pods;
@@ -28,7 +29,7 @@ create table players (
 drop table if exists packs;
 create table packs (
   id integer primary key autoincrement,
-  set_id integer references sets on delete cascade,
+  set_code text,
   player_id integer references players on delete cascade,
   'order' integer
 );

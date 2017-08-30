@@ -13,8 +13,8 @@ class Card():
         return card
 
     @classmethod
-    def create_card(params):
-        card = insert_item('cards', params)
+    def create_card(name, image_url, multiverse_id, cmc, color_identity, set_code):
+        card = insert_item('cards', {'name': name, 'image_url': image_url, 'multiverse_id': multiverse_id, 'cmc': cmc, 'color_identity': color_identity, 'set_code': set_code})
         return card
 
     @classmethod

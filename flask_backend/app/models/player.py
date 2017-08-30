@@ -13,8 +13,9 @@ class Player():
         return player
 
     @classmethod
-    def create_player(params):
-        player = insert_item('players', params)
+    def create_player(email, pod_id):
+        player = insert_item('players', {'email': email, 'pod_id': pod_id})
+        deck = Deck.create_deck(player.id)
         return player
 
     @classmethod

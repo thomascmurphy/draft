@@ -13,8 +13,8 @@ class Deck():
         return deck
 
     @classmethod
-    def create_deck(params):
-        deck = insert_item('decks', params)
+    def create_deck(player_id):
+        deck = insert_item('decks', {'player_id': player_id})
         return deck
 
     @classmethod

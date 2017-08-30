@@ -1,4 +1,7 @@
+from mtgsdk import Set
+
 from .models import *
+from .pack_card import PackCard
 
 class Pack():
     #methods
@@ -13,8 +16,11 @@ class Pack():
         return pack
 
     @classmethod
-    def create_pack(params):
-        pack = insert_item('packs', params)
+    def create_pack(set_code, player_id, order):
+        pack = insert_item('packs', {'set_code': set_code, 'player_id': player_id, 'order': order})
+        cards = Set.generate_booster(set_code)
+        for card in cards:
+            pack_cards.
         return pack
 
     @classmethod
