@@ -21,6 +21,19 @@ def select_items(model, params=()):
       result = cur.execute(query).fetchall()
   return result
 
+def update_item(model, values, params=()):
+  with sql.connect(current_app.config['DATABASE']) as con:
+    cur = con.cursor()
+    updates = ', '.join(values)
+    if params==():
+      query = ""
+    else:
+      query = "where "
+      query += ' & '.join(params)
+    cur.execute("UPDATE %s SET %s WHERE %s", (model, updates, query))
+    result = con.commit()
+  return result
+
 def delete_item_with_id(model, id):
   with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
