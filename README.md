@@ -14,3 +14,12 @@ $ cat requirements.txt
 > .pyenv/bin/pip install mtgsdk
 
 > sqlite3 app/db/draft.db < app/db/schema.sql
+
+
+frontend:
+
+/pods/new create
+/pods view (by email address?)
+/pods/:id
+
+/user/:hash current pack

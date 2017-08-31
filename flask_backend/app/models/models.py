@@ -10,10 +10,10 @@ def insert_item(model, values):
     result = con.commit()
   return result
 
-def select_items(model, params=()):
+def select_items(model, params=[]):
   with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
-    if params==():
+    if params==[]:
       result = cur.execute("select * from %s" % model)
     else:
       query = "select * from %s where " % model
@@ -21,11 +21,11 @@ def select_items(model, params=()):
       result = cur.execute(query).fetchall()
   return result
 
-def update_item(model, values, params=()):
+def update_item(model, values, params=[]):
   with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
     updates = ', '.join(values)
-    if params==():
+    if params==[]:
       query = ""
     else:
       query = "where "

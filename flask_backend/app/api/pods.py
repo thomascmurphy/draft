@@ -3,7 +3,7 @@
 """
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-from ..models import Pod, PackCard
+from ..models import Pod, Pack, PackCard
 
 pods = Blueprint('pods', __name__, url_prefix='/api/v1/pods')
 
@@ -14,8 +14,8 @@ def get_pods():
 
 @pods.route('/<int:pod_id>', methods=['GET'])
 def get_pod(pod_id):
-    pods = Pod.get_pod_by_id(pod_id)
-    return jsonify(pods), 201
+    pod = Pod.get_pod_by_id(pod_id)
+    return jsonify(pod), 201
 
 @pods.route('/', methods=['POST'])
 def create_pod():
@@ -29,10 +29,12 @@ def delete_pod(pod_id):
 
 @pods.route('/<int:pod_id>/picks', methods=['POST'])
 def create_pick():
-    pick = PackCard.update_pack_card(xxxx)
+    pick = PackCard.update_pack_cards(xxxx)
     return jsonify(pick), 201
 
-@pods.route('/<int:pod_id>/picks', methods=['GET'])
+@pods.route('/<int:pod_id>/pack/<int:pack_number>/picks', methods=['GET'])
 def view_picks():
+    pod = Pod.get_pod_by_id(pod_id)
+    packs = Pack.get_packs(["pod_id=%i" % pod_id, "order=%i" % pack_number]))
     picks = PackCard.get_pack_cards(xxxx)
     return jsonify(picks), 201
