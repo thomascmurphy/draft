@@ -1,3 +1,7 @@
+from Crypto.Cipher import AES
+import base64
+from flask import current_app
+
 from .models import *
 
 class Player():
@@ -9,7 +13,10 @@ class Player():
 
     @classmethod
     def get_player_by_hash(hash):
-        player = select_items('players', "hash='%s'" % hash)[0]
+        cipher = AES.new(current_app.config['PLAYER_HASH_KEY'])
+        #hash = base64.encodestring(cipher.encrypt("%016d"%id))
+        id = int(cipher.decrypt(base64.decodestring(hash)))
+        player = select_items('players', "id='%i'" % id)[0]
         return player
 
     @classmethod
