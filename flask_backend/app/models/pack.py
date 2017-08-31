@@ -1,4 +1,4 @@
-from mtgsdk import Set
+from mtgsdk import Set, Card
 
 from .models import *
 from .pack_card import PackCard
@@ -19,8 +19,11 @@ class Pack():
     def create_pack(set_code, player_id, order):
         pack = insert_item('packs', {'set_code': set_code, 'player_id': player_id, 'order': order})
         cards = Set.generate_booster(set_code)
+        card_ids_used = []
         for card in cards:
-            pack_cards.
+            while card['id'] in card_ids_used:
+                card = Card.where(set=set_code).where(rarity=card['rarity'])
+            PackCard.create_pack_card(card['card_multiverse_id'], card['pack_id'])
         return pack
 
     @classmethod
