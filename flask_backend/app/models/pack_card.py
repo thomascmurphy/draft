@@ -16,7 +16,7 @@ class PackCard():
         return pack_card
 
     @classmethod
-    def create_pack_card(card_multiverse_id, pack_id, deck_id=null, pick=null, sideboard=false):
+    def create_pack_card(card_multiverse_id, pack_id, deck_id=None, pick=None, sideboard=None):
         card = select_items('card', "multiverse_id=%i" % card_multiverse_id)
         if not card:
             card_data = CardSDK.find(card_multiverse_id)
