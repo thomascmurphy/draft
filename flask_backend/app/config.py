@@ -11,18 +11,10 @@ class BaseConfig(object):
    DEBUG = False
    TESTING = False
 
-   ADMINS = ['youremail@yourdomain.com']
-
-   # http://flask.pocoo.org/docs/quickstart/#sessions
-   SECRET_KEY = 'secret key'
-
 class DefaultConfig(BaseConfig):
 
    # Statement for enabling the development environment
    DEBUG = True
-
-   # Secret key for signing cookies
-   SECRET_KEY = 'development key'
 
 class LocalConfig(DefaultConfig):
    # config for local development

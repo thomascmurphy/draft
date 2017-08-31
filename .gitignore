@@ -2,8 +2,11 @@
 flask/
 .pyenv/
 
+# Ignore the instance config.
+/flask_backend/app/instance/*
+
 # Ignore the SQLite database.
-/app/db/*.db
+/flask_backend/app/db/*.db
 
 # Mac OS X custom attribute files
 .DS_Store
