@@ -29,3 +29,8 @@ class Player():
     def delete_player(id):
         player = delete_item_with_id('players', "id='%i'" % id)
         return true
+
+    @staticmethod
+    def get_player_pack(player_id):
+        packs = select_items('packs', ["player_id = %i" % player_id, "complete = false"], ['number ASC'])
+        return packs[0]

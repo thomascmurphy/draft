@@ -9,7 +9,7 @@ class Deck():
 
     @staticmethod
     def get_deck_by_id(id):
-        deck = select_items('decks', "id='%i'" % id)[0]
+        deck = select_item_by_id('decks', id)
         return deck
 
     @staticmethod
@@ -19,5 +19,11 @@ class Deck():
 
     @staticmethod
     def delete_deck(id):
-        deck = delete_item_with_id('decks', "id='%i'" % id)
+        deck = delete_item_with_id('decks', id)
         return true
+
+    @staticmethod
+    def get_cards(deck_id):
+        deck = select_item_by_id('decks', deck_id)
+        deck_cards = select_items('pack_cards', ["deck_id=%i" % pack_id])
+        return deck_cards

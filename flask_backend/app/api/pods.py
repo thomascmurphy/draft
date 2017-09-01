@@ -25,7 +25,7 @@ def create_pod():
     pack_sets = request.form['pack_sets']
     player_emails = ast.literal_eval(request.form['player_emails'])
     pod = Pod.create_pod(name, pack_sets, player_emails)
-    return jsonify(pod), 201
+    return jsonify({'pod': pod}), 201
 
 @pods.route('/<int:pod_id>', methods=['DELETE'])
 def delete_pod(pod_id):
@@ -35,11 +35,11 @@ def delete_pod(pod_id):
 @pods.route('/<int:pod_id>/picks', methods=['POST'])
 def create_pick():
     pick = PackCard.update_pack_cards(xxxx)
-    return jsonify(pick), 201
+    return jsonify({'pick': pick}), 201
 
 @pods.route('/<int:pod_id>/pack/<int:pack_number>/picks', methods=['GET'])
 def view_picks():
     pod = Pod.get_pod_by_id(pod_id)
     packs = Pack.get_packs(["pod_id=%i" % pod_id, "order=%i" % pack_number])
     picks = PackCard.get_pack_cards(xxxx)
-    return jsonify(picks), 201
+    return jsonify({'picks': picks}), 201

@@ -1,8 +1,6 @@
-from mtgsdk import Set, Card
-
 from .models import *
 from .pack_card import PackCard
-import pdb
+from .card import Card
 
 class Pack():
     #methods
@@ -13,22 +11,35 @@ class Pack():
 
     @staticmethod
     def get_pack_by_id(id):
-        pack = select_items('packs', "id='%i'" % id)[0]
+        pack = select_item_by_id('packs', id)
         return pack
 
     @staticmethod
     def create_pack(set_code, player_id, number):
         pack = insert_item('packs', {'set_code': set_code, 'player_id': player_id, 'number': number})
-        cards = Set.generate_booster(set_code)
+        booster_cards = SDKSet.generate_booster(set_code)
+        print('Set SDK Call', file=sys.stderr)
         card_ids_used = []
-        for card in cards:
-            while card.multiverse_id in card_ids_used:
-                card = Card.where(set=set_code).where(rarity=card.rarity).all()[0]
-            card_ids_used.append(card.id)
-            PackCard.create_pack_card(card.multiverse_id, pack['id'])
+        for booster_card in booster_cards:
+            while booster_card.multiverse_id in card_ids_used:
+                booster_card = SDKCard.where(set=set_code).where(rarity=card.rarity).all()[0]
+                print('Card SDK Call', file=sys.stderr)
+            existing_cards = select_items('cards', ["multiverse_id=%i" % card_multiverse_id])
+            if existing_cards:
+                card = existing_cards[0]
+            else:
+                card = Card.create_card(booster_card.name, booster_card.image_url, booster_card.multiverse_id, booster_card.cmc, str(booster_card.color_identity), booster_card.set)
+            card_ids_used.append(booster_card.multiverse_id)
+            PackCard.create_pack_card(card['id'], pack['id'])
         return pack
 
     @staticmethod
     def delete_pack(id):
-        pack = delete_item_with_id('packs', "id='%i'" % id)
+        pack = delete_item_with_id('packs', id)
         return true
+
+    @staticmethod
+    def get_available_cards(pack_id):
+        pack = select_item_by_id('packs', pack_id)
+        pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id, "deck_id IS NULL"])
+        return pack_cards

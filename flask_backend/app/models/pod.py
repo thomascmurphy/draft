@@ -1,9 +1,6 @@
-import ast
-
 from .models import *
 from .player import Player
 from .pack import Pack
-import pdb
 
 fields = ['name', 'pack_sets']
 

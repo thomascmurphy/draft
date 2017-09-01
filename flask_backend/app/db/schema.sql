@@ -29,7 +29,8 @@ create table packs (
   id integer primary key autoincrement,
   set_code text,
   player_id integer references players on delete cascade,
-  'number' integer
+  'number' integer,
+  complete boolean default false
 );
 
 drop table if exists decks;
