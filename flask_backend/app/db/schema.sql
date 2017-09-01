@@ -30,7 +30,7 @@ create table packs (
   set_code text,
   player_id integer references players on delete cascade,
   'number' integer,
-  complete boolean default false
+  complete boolean default 0
 );
 
 drop table if exists decks;

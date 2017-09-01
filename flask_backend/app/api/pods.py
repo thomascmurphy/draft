@@ -33,13 +33,13 @@ def delete_pod(pod_id):
     return jsonify(pod), 201
 
 @pods.route('/<int:pod_id>/picks', methods=['POST'])
-def create_pick():
+def create_pick(pod_id):
     pick = PackCard.update_pack_cards(xxxx)
     return jsonify({'pick': pick}), 201
 
 @pods.route('/<int:pod_id>/pack/<int:pack_number>/picks', methods=['GET'])
-def view_picks():
+def view_picks(pod_id, pack_number):
     pod = Pod.get_pod_by_id(pod_id)
-    packs = Pack.get_packs(["pod_id=%i" % pod_id, "order=%i" % pack_number])
+    packs = Pack.get_packs(["pod_id=%i" % pod_id, "number=%i" % pack_number])
     picks = PackCard.get_pack_cards(xxxx)
     return jsonify({'picks': picks}), 201

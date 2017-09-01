@@ -5,6 +5,7 @@ from mtgsdk import Set as SDKSet, Card as SDKCard
 import pdb
 import sys
 import ast
+import random
 
 def insert_item(model, data):
   with sql.connect(current_app.config['DATABASE']) as con:
@@ -25,21 +26,23 @@ def select_items(model, params=[], order=[]):
     cur = con.cursor()
     query = "select * from %s" % model
     if params!=[]:
-      query += " where " + ' & '.join(params)
+      query += " where " + ' AND '.join(params)
     if order != []:
       query += " order by " + ', '.join(order)
+    print(query, file=sys.stderr)
     result = cur.execute(query).fetchall()
     columns = [column[0] for column in cur.description]
     pretty_results = []
     for row in result:
       pretty_results.append(dict(zip(columns, row)))
+
   return pretty_results
 
 def select_item_by_id(model, id):
   items = select_items(model, ["id = %i" % id])
-  if items
+  if items:
     item = items[0]
-  else
+  else:
     item = None
   return item
 

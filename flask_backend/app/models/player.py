@@ -16,7 +16,13 @@ class Player():
         #cipher = AES.new(current_app.config['PLAYER_HASH_KEY'])
         #hash = base64.encodestring(cipher.encrypt("%016d"%id))
         #id = int(cipher.decrypt(base64.decodestring(hash)))
-        player = select_items('players', "id='%i'" % id)[0]
+        email = base64.b64decode(hash)
+        player = select_items('players', "email='%s'" % email)[0]
+        return player
+
+    @staticmethod
+    def get_player_by_id(id):
+        player = select_items('players', ["id='%i'" % id])[0]
         return player
 
     @staticmethod
@@ -32,5 +38,5 @@ class Player():
 
     @staticmethod
     def get_player_pack(player_id):
-        packs = select_items('packs', ["player_id = %i" % player_id, "complete = false"], ['number ASC'])
+        packs = select_items('packs', ["player_id = %i" % player_id, "complete = 0"], ['number ASC'])
         return packs[0]

@@ -25,5 +25,5 @@ class Deck():
     @staticmethod
     def get_cards(deck_id):
         deck = select_item_by_id('decks', deck_id)
-        deck_cards = select_items('pack_cards', ["deck_id=%i" % pack_id])
+        deck_cards = select_items('pack_cards', ["deck_id=%i" % deck_id])
         return deck_cards
