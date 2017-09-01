@@ -23,7 +23,7 @@ def create_app(config=None, app_name=None, blueprints=None):
    if blueprints is None:
      blueprints = DEFAULT_BLUEPRINTS
 
-   app = Flask(app_name, instance_path=COMMON_CONSTANTS.INSTANCE_FOLDER_PATH, instance_relative_config=True)
+   app = Flask(app_name, instance_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance'), instance_relative_config=True)
    configure_app(app, config)
    configure_hook(app)
    configure_blueprints(app, blueprints)
@@ -38,7 +38,7 @@ def configure_app(app, config=None):
    # http://flask.pocoo.org/docs/api/#configuration
    app.config.from_object(Config.DefaultConfig)
    #load the instance config
-   app.config.from_object('config')
+   app.config.from_pyfile('config.py')
 
    if config:
      app.config.from_object(config)

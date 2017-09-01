@@ -1,25 +1,35 @@
 import sqlite3 as sql
 from flask import current_app
+import pdb
 
-def insert_item(model, values):
+def insert_item(model, data):
   with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
-    fields = ','.join(list(values.keys()))
-    values = ','.join(list(values.values()))
-    cur.execute("INSERT INTO %s (%s) VALUES (%s)", (model, fields, values))
-    result = con.commit()
+    fields = ','.join(list(data.keys()))
+    values = ','.join(str(v) for v in list(data.values()))
+    #if model=='cards':
+      #pdb.set_trace()
+    cur.execute("INSERT INTO %s (%s) VALUES (%s)" % (model, fields, ','.join('?' * len(data.values()))), list(data.values()))
+    result = {'id': cur.lastrowid}
+    result.update(data)
+    con.commit()
   return result
 
 def select_items(model, params=[]):
   with sql.connect(current_app.config['DATABASE']) as con:
+    con.row_factory = sql.Row
     cur = con.cursor()
     if params==[]:
-      result = cur.execute("select * from %s" % model)
+      result = cur.execute("select * from %s" % model).fetchall()
     else:
       query = "select * from %s where " % model
       query += ' & '.join(params)
       result = cur.execute(query).fetchall()
-  return result
+    columns = [column[0] for column in cur.description]
+    pretty_results = []
+    for row in result:
+      pretty_results.append(dict(zip(columns, row)))
+  return pretty_results
 
 def update_item(model, values, params=[]):
   with sql.connect(current_app.config['DATABASE']) as con:

@@ -2,22 +2,22 @@ from .models import *
 
 class Deck():
     #methods
-    @classmethod
+    @staticmethod
     def get_decks(params):
         decks = select_items('decks', params)
         return decks
 
-    @classmethod
+    @staticmethod
     def get_deck_by_id(id):
         deck = select_items('decks', "id='%i'" % id)[0]
         return deck
 
-    @classmethod
+    @staticmethod
     def create_deck(player_id):
         deck = insert_item('decks', {'player_id': player_id})
         return deck
 
-    @classmethod
+    @staticmethod
     def delete_deck(id):
         deck = delete_item_with_id('decks', "id='%i'" % id)
         return true
