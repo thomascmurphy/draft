@@ -34,12 +34,22 @@ def delete_pod(pod_id):
 
 @pods.route('/<int:pod_id>/picks', methods=['POST'])
 def create_pick(pod_id):
-    pick = PackCard.update_pack_cards(xxxx)
+    deck_id = request.form['deck_id']
+    pack_card_id = request.form['pack_card_id']
+    pack_card = PackCard.get_pack_card_by_id(pack_card_id)
+    pack = Pack.get_pack_by_id(pack_card['pack_id'])
+    all_pack_cards = Pack.get_all_cards(pack['id'])
+    pick = PackCard.update_pack_card_by_id(pack_card_id, {'deck_id': deck_id})
+    if len(Pack.get_available_cards(pack['id'])) == 0:
+        Pack.update_pack_by_id(pack['id'], {'complete': True})
     return jsonify({'pick': pick}), 201
 
-@pods.route('/<int:pod_id>/pack/<int:pack_number>/picks', methods=['GET'])
-def view_picks(pod_id, pack_number):
+@pods.route('/<int:pod_id>/pack/<int:pack_number>/picks/<int:pick_number>', methods=['GET'])
+def view_picks(pod_id, pack_number, pick_number):
     pod = Pod.get_pod_by_id(pod_id)
-    packs = Pack.get_packs(["pod_id=%i" % pod_id, "number=%i" % pack_number])
-    picks = PackCard.get_pack_cards(xxxx)
-    return jsonify({'picks': picks}), 201
+    players = Player.get_players(["pod_id=%i", pod_id])
+    player_ids = [player['id'] for player in players]
+    packs = Pack.get_packs(["player_id IN (%s)" % ','.join(player_ids), "number=%i" % pack_number])
+    pack_ids = [pack['id'] for pack in packs]
+    picks = PackCard.get_pack_cards(["pack_id IN (%s)" % ','.join(pack_ids), "pick=%i" % pick_number])
+    return jsonify({'players': players, 'packs': packs, 'picks': picks}), 201

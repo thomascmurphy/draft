@@ -23,3 +23,6 @@ frontend:
 /pods/:id
 
 /user/:hash current pack
+
+
+frontend: npm install and npm start

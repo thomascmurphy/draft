@@ -36,6 +36,15 @@ class Pack():
         return pack
 
     @staticmethod
+    def update_packs(values, params):
+        pack = update_item('packs', values, params)
+        return pack
+
+    @staticmethod
+    def update_pack_by_id(id, values):
+        return update_packs(values, ["id=%i", id])
+
+    @staticmethod
     def delete_pack(id):
         pack = delete_item_with_id('packs', id)
         return true
@@ -44,4 +53,10 @@ class Pack():
     def get_available_cards(pack_id):
         pack = select_item_by_id('packs', pack_id)
         pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id, "deck_id IS NULL"])
+        return pack_cards
+
+    @staticmethod
+    def get_all_cards(pack_id):
+        pack = select_item_by_id('packs', pack_id)
+        pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id])
         return pack_cards

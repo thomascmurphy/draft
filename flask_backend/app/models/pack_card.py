@@ -24,6 +24,10 @@ class PackCard():
         return pack_card
 
     @staticmethod
+    def update_pack_card_by_id(id, values):
+        return update_pack_cards(values, ["id=%i", id])
+
+    @staticmethod
     def delete_pack_card(id):
         pack_card = delete_item_with_id('pack_cards', "id='%i'" % id)
         return true

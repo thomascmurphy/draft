@@ -66,3 +66,4 @@ def delete_item_with_id(model, id):
     if id != null:
       result = cur.execute("delete from %s where id = %i;" % (model, id))
   return result
+    
