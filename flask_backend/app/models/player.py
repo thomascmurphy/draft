@@ -17,7 +17,7 @@ class Player():
         #hash = base64.encodestring(cipher.encrypt("%016d"%id))
         #id = int(cipher.decrypt(base64.decodestring(hash)))
         email = base64.b64decode(hash)
-        player = select_items('players', "email='%s'" % email)[0]
+        player = select_items('players', "hash='%s'" % hash)[0]
         return player
 
     @staticmethod
@@ -27,7 +27,8 @@ class Player():
 
     @staticmethod
     def create_player(email, pod_id):
-        player = insert_item('players', {'email': email, 'pod_id': pod_id})
+        player_hash = base64.b64encode("%i%s" % (pod_id, email))
+        player = insert_item('players', {'email': email, 'pod_id': pod_id, 'hash': player_hash})
         deck = Deck.create_deck(player['id'])
         return player
 

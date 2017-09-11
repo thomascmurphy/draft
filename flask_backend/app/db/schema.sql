@@ -21,7 +21,8 @@ create table players (
   id integer primary key autoincrement,
   name text,
   email text not null,
-  pod_id integer references pods on delete cascade
+  pod_id integer references pods on delete cascade,
+  hash text
 );
 
 drop table if exists packs;

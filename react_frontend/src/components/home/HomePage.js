@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
-import * as podActions from '../../actions/podActions';
-import EmailForm from '../pods/EmailForm';
+import * as playerActions from '../../actions/playerActions';
+import EmailForm from '../players/EmailForm';
 
 class HomePage extends React.Component {
   constructor(props, context) {
@@ -13,7 +13,7 @@ class HomePage extends React.Component {
       saving: false
     };
     this.updateEmailState = this.updateEmailState.bind(this);
-    this.filterPods = this.filterPods.bind(this);
+    this.filterPlayers = this.filterPlayers.bind(this);
   }
 
   updateEmailState(event) {
@@ -21,10 +21,10 @@ class HomePage extends React.Component {
     return this.setState({email: event.target.value});
   }
 
-  filterPods(event) {
+  filterPlayers(event) {
     event.preventDefault();
     this.setState({saving: true});
-    this.props.actions.loadPods(this.state.email);
+    this.props.actions.loadPlayers(this.state.email);
   }
 
   render() {
@@ -35,10 +35,10 @@ class HomePage extends React.Component {
           <p>draft with friends.</p>
         </div>
         <div>
-          <h1>Contine Pod</h1>
+          <h1>Contine Draft</h1>
           <EmailForm
             email={this.state.email}
-            onSave={this.filterPods}
+            onSave={this.filterPlayers}
             onChange={this.updateEmailState}
             saving={this.state.saving}/>
         </div>
@@ -54,11 +54,11 @@ HomePage.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(podActions, dispatch)
+    actions: bindActionCreators(playerActions, dispatch)
   };
 }
 
-export default connect(mapDispatchToProps)(HomePage);
+export default connect(null, mapDispatchToProps)(HomePage);
 
 
 /** WEBPACK FOOTER **

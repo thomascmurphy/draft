@@ -1,7 +1,6 @@
 class PodApi {
-  static getAllPods(email) {
-    if (!email) { email = '';}
-    return fetch('http://localhost:5000/api/v1/pods?email=' + email).then(response => {
+  static getAllPods() {
+    return fetch('http://localhost:5000/api/v1/pods').then(response => {
       return response.json();
     }).catch(error => {
       return error;

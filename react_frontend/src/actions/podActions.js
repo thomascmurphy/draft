@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import podApi from '../api/podApi';
 
-export function loadPods(email) {
+export function loadPods() {
   return function(dispatch) {
     return podApi.getAllPods().then(pods => {
       dispatch(loadPodsSuccess(pods));
