@@ -22,7 +22,7 @@ class Player():
 
     @staticmethod
     def get_player_by_id(id):
-        player = select_items('players', ["id='%i'" % id])[0]
+        player = select_item_by_id('players', id)
         return player
 
     @staticmethod

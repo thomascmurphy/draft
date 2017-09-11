@@ -1,5 +1,6 @@
 import os
-from flask import Flask
+from flask import Flask, session
+from flask_cors import CORS
 
 from . import config as Config
 from .common import constants as COMMON_CONSTANTS
@@ -24,6 +25,7 @@ def create_app(config=None, app_name=None, blueprints=None):
      blueprints = DEFAULT_BLUEPRINTS
 
    app = Flask(app_name, instance_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance'), instance_relative_config=True)
+   CORS(app, supports_credentials=True)
    configure_app(app, config)
    configure_hook(app)
    configure_blueprints(app, blueprints)

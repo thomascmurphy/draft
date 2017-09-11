@@ -22,14 +22,20 @@ class PodsPage extends React.Component {
 
 
 PodsPage.propTypes = {
-  pods: PropTypes.array.isRequired
+  pods: PropTypes.array.isRequired,
+  children: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
-  // state = {pods: [{id:1, name: "Maru"}, etc.]}
-  return {
-    pods: state.pods
-  };
+  if (state.pods.pods && state.pods.pods.length > 0) {
+    return {
+      pods: state.pods.pods
+    };
+  } else {
+    return {
+      pods: [{id: '', name: '', packSets: [], playerIds: []}]
+    }
+  }
 }
 
 export default connect(mapStateToProps)(PodsPage);

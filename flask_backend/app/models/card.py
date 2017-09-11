@@ -9,7 +9,7 @@ class Card():
 
     @staticmethod
     def get_card_by_id(id):
-        card = select_items('cards', "id='%i'" % id)[0]
+        card = select_item_by_id('cards', id)
         return card
 
     @staticmethod

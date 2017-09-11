@@ -4,14 +4,20 @@
 import ast
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-from ..models import Pod, Pack, PackCard
+from ..models import Pod, Pack, PackCard, Player
 
 pods = Blueprint('pods', __name__, url_prefix='/api/v1/pods')
 import pdb
 
-@pods.route('/', methods=['GET'])
+@pods.route('', methods=['GET'])
 def get_pods():
-    pods = Pod.get_pods([])
+    email = request.args.get('email')
+    query = []
+    if email:
+      players = Player.get_players(["email = '%s'" % email])
+      pod_ids = [player['pod_id'] for player in players]
+      query = ["pods.id in (%s)" % ",".join(list(map(str, pod_ids)))]
+    pods = Pod.get_pods(query)
     return jsonify({'pods': pods}), 201
 
 @pods.route('/<int:pod_id>', methods=['GET'])

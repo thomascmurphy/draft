@@ -12,7 +12,7 @@ const PodList = ({pods}) => {
   );
 };
 
-PodList.propTypes = {  
+PodList.propTypes = {
   pods: PropTypes.array.isRequired
 };
 

@@ -12,6 +12,11 @@ players = Blueprint('players', __name__, url_prefix='/api/v1/players')
 #     player = Player.get_player_by_hash(player_hash)
 #     return jsonify({'player': player}), 201
 
+@players.route('', methods=['GET'])
+def get_players():
+    players = Player.get_players([])
+    return jsonify({'players': players}), 201
+
 @players.route('/<int:player_id>', methods=['GET'])
 def get_player(player_id):
     player = Player.get_player_by_id(player_id)

@@ -10,7 +10,7 @@ class PackCard():
 
     @staticmethod
     def get_pack_card_by_id(id):
-        pack_card = select_items('pack_cards', "id='%i'" % id)[0]
+        pack_card = select_item_by_id('pack_cards', id)
         return pack_card
 
     @staticmethod
