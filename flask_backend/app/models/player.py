@@ -8,7 +8,7 @@ class Player():
     #methods
     @staticmethod
     def get_players(params):
-        players = select_items('players', params)
+        players = select_items('players', params, associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
         return players
 
     @staticmethod
@@ -17,12 +17,12 @@ class Player():
         #hash = base64.encodestring(cipher.encrypt("%016d"%id))
         #id = int(cipher.decrypt(base64.decodestring(hash)))
         email = base64.b64decode(hash)
-        player = select_items('players', "hash='%s'" % hash)[0]
+        player = select_first_item('players', ["hash='%s'" % hash], associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
         return player
 
     @staticmethod
     def get_player_by_id(id):
-        player = select_item_by_id('players', id)
+        player = select_item_by_id('players', id, associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
         return player
 
     @staticmethod

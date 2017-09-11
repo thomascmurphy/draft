@@ -31,7 +31,7 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 
     if associations!=[]:
       id_fields = ["'[' || group_concat(%s_join.id) || ']' AS %s_ids" % (association['table'], association['model']) for association in associations]
-      joins = ["LEFT OUTER JOIN %s %s_join ON (%s.id = %s_join.%s)" % (association['table'], association['table'], model, association['table'], association['join_field']) for association in associations]
+      joins = ["LEFT OUTER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['table'], association['join_field_left'], association['join_field_right']) for association in associations]
       select += id_fields
       join_query = " " + " ".join(joins)
     else:
@@ -56,12 +56,15 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
   return pretty_results
 
 def select_item_by_id(model, id, associations=[]):
-  items = select_items(model, ["%s.id = %i" % (model, id)], associations=associations)
-  if items:
-    item = items[0]
-  else:
-    item = None
-  return item
+  return select_first_item(model, ["%s.id = %i" % (model, id)], associations=associations)
+
+def select_first_item(model, params=[], order=[], select=[], associations=[]):
+    items = select_items(model, params=[], order=[], select=[], associations=[])
+    if items:
+      item = items[0]
+    else:
+      item = None
+    return item
 
 
 def update_item(model, values, params=[]):
@@ -83,4 +86,3 @@ def delete_item_with_id(model, id):
     if id != null:
       result = cur.execute("delete from %s where id = %i;" % (model, id))
   return result
-

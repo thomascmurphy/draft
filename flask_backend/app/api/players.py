@@ -14,6 +14,10 @@ players = Blueprint('players', __name__, url_prefix='/api/v1/players')
 
 @players.route('', methods=['GET'])
 def get_players():
+    email = request.args.get('email')
+    query = []
+    if email:
+      query = ["email = '%s'" % email]
     players = Player.get_players([])
     return jsonify({'players': players}), 201
 
