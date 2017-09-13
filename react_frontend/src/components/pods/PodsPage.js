@@ -27,9 +27,9 @@ PodsPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  if (state.pods.pods && state.pods.pods.length > 0) {
+  if (state.pods && state.pods.length > 0) {
     return {
-      pods: state.pods.pods
+      pods: state.pods
     };
   } else {
     return {

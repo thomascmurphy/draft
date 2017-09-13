@@ -4,12 +4,13 @@ import {bindActionCreators} from 'redux';
 import {Link} from 'react-router';
 import * as playerActions from '../../actions/playerActions';
 import EmailForm from '../players/EmailForm';
+import {browserHistory} from 'react-router';
 
 class HomePage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      email: this.props.email,
+      email: '',
       saving: false
     };
     this.updateEmailState = this.updateEmailState.bind(this);
@@ -25,6 +26,7 @@ class HomePage extends React.Component {
     event.preventDefault();
     this.setState({saving: true});
     this.props.actions.loadPlayers(this.state.email);
+    browserHistory.push('/pods');
   }
 
   render() {
@@ -35,7 +37,7 @@ class HomePage extends React.Component {
           <p>draft with friends.</p>
         </div>
         <div>
-          <h1>Contine Draft</h1>
+          <h1>Continue Draft</h1>
           <EmailForm
             email={this.state.email}
             onSave={this.filterPlayers}

@@ -8,7 +8,7 @@ class Player():
     #methods
     @staticmethod
     def get_players(params):
-        players = select_items('players', params, associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
+        players = select_items('players', params)
         return players
 
     @staticmethod
@@ -17,18 +17,20 @@ class Player():
         #hash = base64.encodestring(cipher.encrypt("%016d"%id))
         #id = int(cipher.decrypt(base64.decodestring(hash)))
         email = base64.b64decode(hash)
-        player = select_first_item('players', ["hash='%s'" % hash], associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
+        player = select_first_item('players', ["hash='%s'" % hash])
         return player
 
     @staticmethod
     def get_player_by_id(id):
-        player = select_item_by_id('players', id, associations=[{'table': 'pods', 'model': 'pod', 'join_field_left': 'pod_id', 'join_field_right': 'id'}])
+        player = select_item_by_id('players', id)
         return player
 
     @staticmethod
     def create_player(email, pod_id):
-        player_hash = base64.b64encode("%i%s" % (pod_id, email))
-        player = insert_item('players', {'email': email, 'pod_id': pod_id, 'hash': player_hash})
+        hash_components = "%i%s" % (pod_id, email)
+        player_hash = base64.b64encode(hash_components.encode())
+        player_hash_string = player_hash.decode('utf-8')
+        player = insert_item('players', {'email': email, 'pod_id': pod_id, 'hash': player_hash_string})
         deck = Deck.create_deck(player['id'])
         return player
 

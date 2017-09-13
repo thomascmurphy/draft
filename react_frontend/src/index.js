@@ -11,8 +11,6 @@ import {loadPlayers} from './actions/playerActions';
 
 const store = configureStore();
 
-store.dispatch(loadPods());
-store.dispatch(loadPlayers());
 
 render(
  <Provider store={store}>

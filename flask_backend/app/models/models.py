@@ -31,7 +31,7 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 
     if associations!=[]:
       id_fields = ["'[' || group_concat(%s_join.id) || ']' AS %s_ids" % (association['table'], association['model']) for association in associations]
-      joins = ["LEFT OUTER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['table'], association['join_field_left'], association['join_field_right']) for association in associations]
+      joins = ["LEFT OUTER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right']) for association in associations]
       select += id_fields
       join_query = " " + " ".join(joins)
     else:

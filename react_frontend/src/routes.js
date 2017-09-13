@@ -4,6 +4,7 @@ import App from './components/App';
 import HomePage from './components/home/HomePage';
 import PodsPage from './components/pods/PodsPage';
 import PodPage from './components/pods/PodPage';
+import PackPage from './components/packs/PackPage';
 
 export default (
   <Route path="/" component={App}>
@@ -12,5 +13,6 @@ export default (
       <Route path="/pods/:id" component={PodPage} />
     </Route>
     <Route path="/players/:email/pods" component={PodsPage} />
+    <Route path="/players/:hash/pack" component={PackPage} />
   </Route>
 );
