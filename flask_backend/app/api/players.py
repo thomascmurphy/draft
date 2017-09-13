@@ -35,16 +35,16 @@ def get_player(player_id):
 @players.route('/<player_hash>/deck', methods=['GET'])
 def get_player_deck_by_hash(player_hash):
     player = Player.get_player_by_hash(player_hash)
-    deck = Deck.get_decks(["player_id=%i" % player_id])
-    cards = Deck.get_cards(deck['id'])
-    return jsonify({'player': player, 'deck': deck, 'cards': cards}), 201
+    deck = Player.get_player_deck(player['id'])
+    deck_cards = Deck.get_cards(deck['id'])
+    return jsonify({'player': player, 'deck': deck, 'deck_cards': deck_cards}), 201
 
-@players.route('/<int:player_id>/deck', methods=['GET'])
-def get_player_deck_by_id(player_id):
-    player = Player.get_player_by_id(player_id)
-    deck = Deck.get_decks(["player_id=%i" % player_id])[0]
-    cards = Deck.get_cards(deck['id'])
-    return jsonify({'player': player, 'deck': deck, 'cards': cards}), 201
+# @players.route('/<int:player_id>/deck', methods=['GET'])
+# def get_player_deck_by_id(player_id):
+#     player = Player.get_player_by_id(player_id)
+#     deck = Player.get_player_deck(player['id'])
+#     cards = Deck.get_cards(deck['id'])
+#     return jsonify({'player': player, 'deck': deck, 'cards': cards}), 201
 
 @players.route('/<player_hash>/pack', methods=['GET'])
 def get_player_pack_by_hash(player_hash):
@@ -53,12 +53,12 @@ def get_player_pack_by_hash(player_hash):
     pack_cards = Pack.get_available_cards(pack['id'])
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards}), 201
 
-@players.route('/<int:player_id>/pack', methods=['GET'])
-def get_player_pack_by_id(player_id):
-    player = Player.get_player_by_id(player_id)
-    pack = Player.get_player_pack(player_id)
-    cards = Pack.get_available_cards(pack['id'])
-    return jsonify({'player': player, 'pack': pack, 'cards': cards}), 201
+# @players.route('/<int:player_id>/pack', methods=['GET'])
+# def get_player_pack_by_id(player_id):
+#     player = Player.get_player_by_id(player_id)
+#     pack = Player.get_player_pack(player_id)
+#     cards = Pack.get_available_cards(pack['id'])
+#     return jsonify({'player': player, 'pack': pack, 'cards': cards}), 201
 
 @players.route('/pick', methods=['POST'])
 def create_pick():
@@ -73,5 +73,6 @@ def create_pick():
     pack_card = PackCard.pick_pack_card(pack_card_id, deck_id, next_player_id)
 
     pack = Player.get_player_pack(player['id'])
-    cards = Pack.get_available_cards(pack['id'])
-    return jsonify({'player': player, 'pack': pack, 'cards': cards}), 201
+    pack_cards = Pack.get_available_cards(pack['id'])
+    deck_cards = Deck.get_cards(deck['id'])
+    return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'deck_cards': deck_cards}), 201

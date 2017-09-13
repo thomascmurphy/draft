@@ -8,7 +8,7 @@ class PackCardView extends React.Component {
   render() {
     var linkDisplay = {display: 'block', cursor: 'pointer'};
     return (
-      <div className="col-sm-2" key={this.props.packCard.id}>
+      <div className="col-sm-4" key={this.props.packCard.id}>
         <a style={linkDisplay} onClick={this.props.onClick} value={this.props.packCard.id}>
           <img className="img-responsive" src={this.props.packCard.image_url} alt={this.props.packCard.id}/>
         </a>

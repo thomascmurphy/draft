@@ -4,6 +4,7 @@ export default {
   sets: [],
   cards: [],
   packCards: [],
+  deckCards: [],
   decks: [],
   packs: []
 };

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playerActions from '../../actions/playerActions';
 import PackCardList from './PackCardList';
+import DeckCardList from './DeckCardList';
 
 class PackPage extends React.Component {
   constructor(props, context) {
@@ -10,6 +11,7 @@ class PackPage extends React.Component {
     this.state = {
       pack: this.props.pack,
       packCards: this.props.packCards,
+      deckCards: this.props.deckCards,
       hash: this.props.hash,
       saving: false
     };
@@ -18,6 +20,7 @@ class PackPage extends React.Component {
 
   componentDidMount() {
     this.props.actions.loadPackCards(this.state.hash);
+    this.props.actions.loadDeckCards(this.state.hash);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,6 +29,9 @@ class PackPage extends React.Component {
     }
     if (this.props.packCards != nextProps.packCards) {
       this.setState({packCards: nextProps.packCards});
+    }
+    if (this.props.deckCards != nextProps.deckCards) {
+      this.setState({deckCards: nextProps.deckCards});
     }
   }
 
@@ -38,10 +44,15 @@ class PackPage extends React.Component {
 
   render() {
     const packCards = this.props.packCards;
+    const deckCards = this.props.deckCards;
     return (
-      <div className="col-md-12">
+      <div className="col-md-8">
         <h1>Pack #{this.props.pack.number}</h1>
         <PackCardList packCards={packCards} onClick={this.savePick} />
+      </div>
+      <div className="col-md-4">
+        <h1>Your Deck</h1>
+        <DeckCardList deckCards={deckCards} />
       </div>
     );
   }
@@ -50,6 +61,7 @@ class PackPage extends React.Component {
 PackPage.propTypes = {
   pack: PropTypes.object.isRequired,
   packCards: PropTypes.array.isRequired,
+  deckCards: PropTypes.array.isRequired,
   hash: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired
 };
@@ -66,13 +78,15 @@ function collectPackCards(packCards, pack) {
 function mapStateToProps(state, ownProps) {
   let pack = {set_code: '', number: 0, complete: false};
   let packCards = [];
+  let deckCards = [];
   const hash = ownProps.params.hash;
   if (state.packs.length > 0 && state.packCards.length > 0) {
     let packId = state.packCards[0].pack_id
     pack = Object.assign({}, state.packs.find(pack => pack.id == packId));
     packCards = collectPackCards(state.packCards, pack);
+    deckCards = state.deckCards
   }
-  return {pack: pack, packCards: packCards, hash: hash};
+  return {pack: pack, packCards: packCards, deckCards: deckCards, hash: hash};
 }
 
 function mapDispatchToProps(dispatch) {

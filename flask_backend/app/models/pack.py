@@ -53,11 +53,7 @@ class Pack():
     def get_available_cards(pack_id):
         pack = select_item_by_id('packs', pack_id)
         pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id, "deck_id IS NULL"])
-        card_ids = [pack_card['id'] for pack_card in pack_cards]
-        cards = select_items('cards', ["cards.id in (%s)" % ",".join(list(map(str, card_ids)))])
-        card_images = {card['id']: card['image_url'] for card in cards}
-        pack_cards = [dict({'image_url': card_images[pack_card['card_id']]}, **pack_card) for pack_card in pack_cards]
-        return pack_cards
+        return PackCard.add_card_images_to_pack_cards(pack_cards)
 
     @staticmethod
     def get_all_cards(pack_id):

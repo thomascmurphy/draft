@@ -17,6 +17,15 @@ class PlayerApi {
     });
   }
 
+  static getDeck(hash) {
+    if (!hash) { hash = '';}
+    return fetch(`${process.env.API_HOST}/api/v1/players/` + hash + '/deck').then(response => {
+      return response.json();
+    }).catch(error => {
+      return error;
+    });
+  }
+
   static makePick(packCardId) {
     const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
     const request = new Request(`${process.env.API_HOST}/api/v1/players/pick`, {

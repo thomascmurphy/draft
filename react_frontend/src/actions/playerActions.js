@@ -13,8 +13,16 @@ export function loadPackCardsSuccess(pack_cards) {
   return {type: types.LOAD_PACK_CARDS_SUCCESS, pack_cards};
 }
 
+export function loadDeckCardsSuccess(deck_cards) {
+  return {type: types.LOAD_DECK_CARDS_SUCCESS, deck_cards};
+}
+
 export function filterPacksSuccess(packs) {
   return {type: types.LOAD_PACKS_SUCCESS, packs};
+}
+
+export function filterDecksSuccess(decks) {
+  return {type: types.LOAD_DECKS_SUCCESS, decks};
 }
 
 export function loadPlayers(email) {
@@ -39,11 +47,23 @@ export function loadPackCards(hash) {
   };
 }
 
-export function makePick(playerHash, packCardId) {
+export function loadDeckCards(hash) {
   return function(dispatch) {
-    return playerApi.makePick(playerHash, packCardId).then(pack => {
-      dispatch(loadPackCardsSuccess(pack.pack_cards));
-      dispatch(filterPacksSuccess([pack.pack]));
+    return playerApi.getPack(hash).then(deck => {
+      dispatch(loadDeckCardsSuccess(deck.deck_cards));
+      dispatch(filterDecksSuccess([deck.deck]));
+    }).catch(error => {
+      throw(error);
+    });
+  };
+}
+
+export function makePick(packCardId) {
+  return function(dispatch) {
+    return playerApi.makePick(packCardId).then(response => {
+      dispatch(loadPackCardsSuccess(response.pack_cards));
+      dispatch(loadDeckCardsSuccess(response.deck_cards));
+      dispatch(filterPacksSuccess([response.pack]));
     }).catch(error => {
       throw(error);
     });
