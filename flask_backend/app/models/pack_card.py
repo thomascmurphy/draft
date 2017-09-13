@@ -1,5 +1,6 @@
 from .models import *
 from .card import Card
+from .pack import Pack
 
 class PackCard():
     #methods
@@ -24,8 +25,22 @@ class PackCard():
         return pack_card
 
     @staticmethod
+    def get_pick_number(pack_id):
+        pack_cards = Pack.get_all_cards(pack_id)
+        last_pick = max([pack_card["pick"] for pack_card in pack_cards])
+        current_pick = last_pick + 1
+        return current_pick
+
+    @staticmethod
     def update_pack_card_by_id(id, values):
         return update_pack_cards(values, ["id=%i", id])
+
+    @staticmethod
+    def pick_pack_card(pack_card_id, deck_id, next_player_id):
+        pick_number = get_pick_number(pack_card_id)
+        pack_card = update_pack_card_by_id(pack_card_id, {pick_number: pick_number, deck_id: deck_id})
+        pack = Pack.update_pack_by_id(pack_card['pack_id'], {player_id: next_player_id})
+        return pack_card
 
     @staticmethod
     def delete_pack_card(id):

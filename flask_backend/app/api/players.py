@@ -3,7 +3,7 @@
 """
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-from ..models import Player, Pack, Deck, Pod
+from ..models import Player, Pack, Deck, Pod, PackCard
 import pdb
 
 players = Blueprint('players', __name__, url_prefix='/api/v1/players')
@@ -57,5 +57,21 @@ def get_player_pack_by_hash(player_hash):
 def get_player_pack_by_id(player_id):
     player = Player.get_player_by_id(player_id)
     pack = Player.get_player_pack(player_id)
+    cards = Pack.get_available_cards(pack['id'])
+    return jsonify({'player': player, 'pack': pack, 'cards': cards}), 201
+
+@players.route('/pick', methods=['POST'])
+def create_pick():
+    pack_card_id = request.form['pack_card_id']
+    pack_card = PackCard.get_pack_card_by_id(pack_card_id)
+    pack = Pack.get_pack_by_id(pack_card['id'])
+    player = Player.get_player_by_id(pack['player_id'])
+    pod = Pod.get_pod_by_id(player['pod_id'])
+    player_ids = pod['player_ids']
+    next_player_id = player_ids[ (player_ids.index(player['id'] + 1) % len(player_ids)]
+    deck = Deck.get_deck_by_player_id(player['id'])
+    pack_card = PackCard.pick_pack_card(pack_card_id, deck_id, next_player_id)
+
+    pack = Player.get_player_pack(player['id'])
     cards = Pack.get_available_cards(pack['id'])
     return jsonify({'player': player, 'pack': pack, 'cards': cards}), 201

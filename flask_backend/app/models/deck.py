@@ -13,6 +13,11 @@ class Deck():
         return deck
 
     @staticmethod
+    def get_deck_by_player_id(player_id):
+        deck = select_first_item('decks', ["player_id=%i" % player_id])
+        return deck
+
+    @staticmethod
     def create_deck(player_id):
         deck = insert_item('decks', {'player_id': player_id})
         return deck

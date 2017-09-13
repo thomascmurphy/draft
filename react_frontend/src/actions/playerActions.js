@@ -38,3 +38,14 @@ export function loadPackCards(hash) {
     });
   };
 }
+
+export function makePick(playerHash, packCardId) {
+  return function(dispatch) {
+    return playerApi.makePick(playerHash, packCardId).then(pack => {
+      dispatch(loadPackCardsSuccess(pack.pack_cards));
+      dispatch(filterPacksSuccess([pack.pack]));
+    }).catch(error => {
+      throw(error);
+    });
+  };
+}

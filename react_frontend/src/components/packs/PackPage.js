@@ -32,7 +32,7 @@ class PackPage extends React.Component {
   savePick(event) {
     event.preventDefault();
     this.setState({saving: true});
-    this.props.actions.makePick();
+    this.props.actions.makePick(event.target.value);
   }
 
 

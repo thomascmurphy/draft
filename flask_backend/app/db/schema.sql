@@ -46,6 +46,6 @@ create table pack_cards (
   card_id integer references cards on delete cascade,
   pack_id integer references packs on delete cascade,
   deck_id integer references decks on delete cascade,
-  pick integer,
+  pick_number integer,
   sideboard boolean
 );
