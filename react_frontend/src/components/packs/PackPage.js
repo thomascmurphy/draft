@@ -38,7 +38,7 @@ class PackPage extends React.Component {
   savePick(event) {
     event.preventDefault();
     this.setState({saving: true});
-    this.props.actions.makePick(event.target.value);
+    this.props.actions.makePick(event.currentTarget.getAttribute('data-value'));
   }
 
 
@@ -46,13 +46,15 @@ class PackPage extends React.Component {
     const packCards = this.props.packCards;
     const deckCards = this.props.deckCards;
     return (
-      <div className="col-md-8">
-        <h1>Pack #{this.props.pack.number}</h1>
-        <PackCardList packCards={packCards} onClick={this.savePick} />
-      </div>
-      <div className="col-md-4">
-        <h1>Your Deck</h1>
-        <DeckCardList deckCards={deckCards} />
+      <div className="row">
+        <div className="col-md-6">
+          <h1>Pack #{this.props.pack.number}</h1>
+          <PackCardList packCards={packCards} onClick={this.savePick} />
+        </div>
+        <div className="col-md-6">
+          <h1>Your Deck</h1>
+          <DeckCardList deckCards={deckCards} />
+        </div>
       </div>
     );
   }
@@ -81,10 +83,10 @@ function mapStateToProps(state, ownProps) {
   let deckCards = [];
   const hash = ownProps.params.hash;
   if (state.packs.length > 0 && state.packCards.length > 0) {
-    let packId = state.packCards[0].pack_id
+    let packId = state.packCards[0].pack_id;
     pack = Object.assign({}, state.packs.find(pack => pack.id == packId));
     packCards = collectPackCards(state.packCards, pack);
-    deckCards = state.deckCards
+    deckCards = state.deckCards;
   }
   return {pack: pack, packCards: packCards, deckCards: deckCards, hash: hash};
 }

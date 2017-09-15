@@ -24,7 +24,7 @@ class Pod():
         for player_email in player_emails:
             player = Player.create_player(player_email, pod['id'])
             for counter,set_code in enumerate(packs_array):
-                pack = Pack.create_pack(set_code, player['id'], counter+1)
+                pack = Pack.create_pack(set_code, player['id'], counter+1, counter==0)
         return pod
 
     @staticmethod

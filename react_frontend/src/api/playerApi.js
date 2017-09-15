@@ -27,12 +27,16 @@ class PlayerApi {
   }
 
   static makePick(packCardId) {
-    const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
+    var formData = new FormData();
+    formData.append('pack_card_id', packCardId);
     const request = new Request(`${process.env.API_HOST}/api/v1/players/pick`, {
       method: 'POST',
-      headers: headers,
-      body: JSON.stringify({pack_card_id: packCardId})
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      mode: 'no-cors',
+      body: formData
     });
+    console.log(JSON.stringify({pack_card_id: packCardId}));
+    console.log(request);
 
     return fetch(request).then(response => {
       return response.json();

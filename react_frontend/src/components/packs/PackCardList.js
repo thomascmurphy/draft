@@ -1,13 +1,17 @@
 import React, {PropTypes} from 'react';
 import { Link, IndexLink } from 'react-router';
-import PackCardView from './PackCardView';
 
 class PackCardList extends React.Component {
-  render() {var linkDisplay = {display: 'block', cursor: 'pointer'};
+  render() {
+    var linkDisplay = {display: 'block', cursor: 'pointer'};
     return (
         <div className="row">
           {this.props.packCards.map(packCard =>
-            <PackCardView packCard={packCard} onClick={this.props.onClick}/>
+            <div className="col-sm-4" key={packCard.id}>
+              <a style={linkDisplay} onClick={this.props.onClick} data-value={packCard.id}>
+                <img className="img-responsive" src={packCard.image_url} alt={packCard.id}/>
+              </a>
+            </div>
           )}
         </div>
     );

@@ -31,6 +31,7 @@ create table packs (
   set_code text,
   player_id integer references players on delete cascade,
   'number' integer,
+  open boolean default 0,
   complete boolean default 0
 );
 

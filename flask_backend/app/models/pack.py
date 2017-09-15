@@ -15,8 +15,8 @@ class Pack():
         return pack
 
     @staticmethod
-    def create_pack(set_code, player_id, number):
-        pack = insert_item('packs', {'set_code': set_code, 'player_id': player_id, 'number': number})
+    def create_pack(set_code, player_id, number, open_pack):
+        pack = insert_item('packs', {'set_code': set_code, 'player_id': player_id, 'number': number, 'open': open_pack})
         booster_cards = SDKSet.generate_booster(set_code)
         print('Set SDK Call', file=sys.stderr)
         card_ids_used = []
@@ -60,3 +60,9 @@ class Pack():
         pack = select_item_by_id('packs', pack_id)
         pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id])
         return pack_cards
+
+    @staticmethod
+    def get_pick_number(pack_cards=[]):
+        last_pick = max([pack_card["pick_number"] if pack_card["pick_number"] else 0 for pack_card in pack_cards])
+        current_pick = last_pick + 1
+        return current_pick

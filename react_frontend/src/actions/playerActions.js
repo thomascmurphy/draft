@@ -49,7 +49,7 @@ export function loadPackCards(hash) {
 
 export function loadDeckCards(hash) {
   return function(dispatch) {
-    return playerApi.getPack(hash).then(deck => {
+    return playerApi.getDeck(hash).then(deck => {
       dispatch(loadDeckCardsSuccess(deck.deck_cards));
       dispatch(filterDecksSuccess([deck.deck]));
     }).catch(error => {

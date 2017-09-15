@@ -1,4 +1,5 @@
 from .models import *
+from .pack_card import PackCard
 
 class Deck():
     #methods

@@ -3,13 +3,15 @@ import pods from './podReducer';
 import players from './playerReducer';
 import packs from './packReducer';
 import packCards from './packCardReducer';
+import deckCards from './deckCardReducer';
 
 const rootReducer = combineReducers({
   // short hand property names
   pods,
   players,
   packs,
-  packCards
+  packCards,
+  deckCards
 });
 
 export default rootReducer;

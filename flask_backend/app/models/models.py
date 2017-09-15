@@ -31,7 +31,7 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 
     if associations!=[]:
       id_fields = ["'[' || group_concat(%s_join.id) || ']' AS %s_ids" % (association['table'], association['model']) for association in associations]
-      joins = ["LEFT OUTER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right']) for association in associations]
+      joins = ["INNER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right']) for association in associations]
       select += id_fields
       join_query = " " + " ".join(joins)
     else:
@@ -59,7 +59,7 @@ def select_item_by_id(model, id, associations=[]):
   return select_first_item(model, ["%s.id = %i" % (model, id)], associations=associations)
 
 def select_first_item(model, params=[], order=[], select=[], associations=[]):
-    items = select_items(model, params=[], order=[], select=[], associations=[])
+    items = select_items(model, params, order, select, associations)
     if items:
       item = items[0]
     else:
@@ -74,10 +74,9 @@ def update_item(model, values, params=[]):
     if params==[]:
       query = ""
     else:
-      query = "where "
-      query += ' & '.join(params)
-    cur.execute("UPDATE %s SET %s WHERE %s", (model, updates, query))
-    result = con.commit()
+      query = ' & '.join(params)
+    result = cur.execute("UPDATE %s SET %s WHERE %s" % (model, updates, query))
+    con.commit()
   return result
 
 def delete_item_with_id(model, id):
