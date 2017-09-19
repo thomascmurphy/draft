@@ -6,7 +6,7 @@ class DeckCardList extends React.Component {
     return (
         <div className="row">
           {this.props.deckCards.map(deckCard =>
-            <div className="col-sm-2" key={deckCard.id}>
+            <div className="deck_card img_zoom mini" key={'deck_card:' + deckCard.id}>
               <img className="img-responsive" src={deckCard.image_url} alt={deckCard.id}/>
             </div>
           )}

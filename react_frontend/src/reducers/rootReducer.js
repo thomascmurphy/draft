@@ -4,6 +4,7 @@ import players from './playerReducer';
 import packs from './packReducer';
 import packCards from './packCardReducer';
 import deckCards from './deckCardReducer';
+import decks from './deckReducer';
 
 const rootReducer = combineReducers({
   // short hand property names
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   players,
   packs,
   packCards,
-  deckCards
+  deckCards,
+  decks
 });
 
 export default rootReducer;

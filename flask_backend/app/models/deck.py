@@ -31,5 +31,5 @@ class Deck():
     @staticmethod
     def get_cards(deck_id):
         deck = select_item_by_id('decks', deck_id)
-        deck_cards = select_items('pack_cards', ["deck_id=%i" % deck_id])
+        deck_cards = select_items('pack_cards', ["deck_id=%i" % deck_id], ["pack_cards.pick_number ASC"])
         return PackCard.add_card_images_to_pack_cards(deck_cards)

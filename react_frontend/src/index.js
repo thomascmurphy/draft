@@ -6,8 +6,6 @@ import configureStore from './store/configureStore';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import routes from './routes';
-import {loadPods} from './actions/podActions';
-import {loadPlayers} from './actions/playerActions';
 
 const store = configureStore();
 

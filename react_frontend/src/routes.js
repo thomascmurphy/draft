@@ -12,6 +12,7 @@ export default (
     <Route path="/pods" component={PodsPage} >
       <Route path="/pods/:id" component={PodPage} />
     </Route>
+    <Route path="/pods/:podId/recap" component={PodPage} />
     <Route path="/players/:email/pods" component={PodsPage} />
     <Route path="/players/:hash/pack" component={PackPage} />
   </Route>

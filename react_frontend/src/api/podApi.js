@@ -7,6 +7,14 @@ class PodApi {
     });
   }
 
+  static getPod(podId) {
+    return fetch(`${process.env.API_HOST}/api/v1/pods/${podId}`).then(response => {
+      return response.json();
+    }).catch(error => {
+      return error;
+    });
+  }
+
   static updatePod(pod) {
     const request = new Request(`${process.env.API_HOST}/api/v1/pods/${pod.id}`, {
       method: 'PUT',

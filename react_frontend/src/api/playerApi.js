@@ -30,15 +30,28 @@ class PlayerApi {
     var formData = new FormData();
     formData.append('pack_card_id', packCardId);
     const request = new Request(`${process.env.API_HOST}/api/v1/players/pick`, {
-      method: 'POST',
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-      mode: 'no-cors',
-      body: formData
+      method: 'post',
+      headers: new Headers({'Accept': 'application/json', 'Content-Type': 'application/json'}),
+      body: JSON.stringify({pack_card_id: packCardId}),
+      mode: 'cors'
     });
-    console.log(JSON.stringify({pack_card_id: packCardId}));
-    console.log(request);
 
     return fetch(request).then(response => {
+      return response.json();
+/*
+      response.json().then(json => {
+        console.log('pick response json:', json);
+        return json;
+      });
+*/
+    }).catch(error => {
+      return error;
+    });
+  }
+
+  static getCardImages(hash) {
+    if (!hash) { hash = '';}
+    return fetch(`${process.env.API_HOST}/api/v1/players/` + hash + '/card_images').then(response => {
       return response.json();
     }).catch(error => {
       return error;

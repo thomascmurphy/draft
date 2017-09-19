@@ -25,7 +25,8 @@ def create_app(config=None, app_name=None, blueprints=None):
      blueprints = DEFAULT_BLUEPRINTS
 
    app = Flask(app_name, instance_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance'), instance_relative_config=True)
-   CORS(app, supports_credentials=True)
+   cors = CORS(app, resources={r'/api/*': {'origins': '*'}})
+   app.config['CORS_HEADERS'] = 'Content-Type'
    configure_app(app, config)
    configure_hook(app)
    configure_blueprints(app, blueprints)

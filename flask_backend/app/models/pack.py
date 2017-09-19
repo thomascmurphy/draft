@@ -31,7 +31,7 @@ class Pack():
                 card = existing_cards[0]
             else:
                 card = Card.create_card(booster_card.name, booster_card.image_url, booster_card.multiverse_id, booster_card.cmc, json.dumps(booster_card.colors), booster_card.set)
-                existing_cards_multiverse_ids += booster_card.multiverse_id
+                existing_cards_multiverse_ids.append(booster_card.multiverse_id)
             card_ids_used.append(booster_card.multiverse_id)
             PackCard.create_pack_card(card['id'], pack['id'])
         return pack

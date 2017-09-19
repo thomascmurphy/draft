@@ -29,11 +29,13 @@ class PackCard():
         return PackCard.update_pack_card(values, ["pack_cards.id=%i" % id])
 
     @staticmethod
-    def pick_pack_card(pack_card_id, deck_id, next_player_id, pick_number):
+    def pick_pack_card(pack_card_id, deck_id, player_id, next_player_id, pick_number):
         pack_card = PackCard.update_pack_card_by_id(pack_card_id, ['pick_number=%i' % pick_number, 'deck_id=%i' % deck_id])
         remaining_cards = select_items('pack_cards', ['pack_id=%i' % pack_card['pack_id'], 'deck_id IS NULL'])
-        pack_complete = 0 if len(remaining_cards['pack_cards']) > 0 else 1
+        pack_complete = 0 if len(remaining_cards) > 0 else 1
         pack = update_item('packs', ['player_id=%i' % next_player_id, 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
+        if pack_complete and pack.number < 3:
+          next_pack = update_item('packs', ['open=1'], ['packs.player_id=%i' % player_id, 'packs.number=%i' % (pack.number + 1)])
         return pack_card
 
     @staticmethod

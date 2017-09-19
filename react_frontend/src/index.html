@@ -3,7 +3,57 @@
   <head>
     <title>Draft Academy</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <style type="text/css">
 
+      .deck_card {
+        width: 100px;
+        display: inline-block;
+        margin: 5px;
+      }
+
+      .deck_card.mini {
+        width: 50px;
+        margin: 2px;
+      }
+
+      .img_zoom {
+        display: inline-block;
+        overflow: visible;
+      }
+
+      .img_zoom img {
+        -webkit-transition: all .05s ease;
+        -moz-transition: all .05s ease;
+        -ms-transition: all .05s ease;
+        -o-transition: all .05s ease;
+        transition: all .05s ease;
+        vertical-align: middle;
+        position: relative;
+      }
+
+      .img_zoom img:hover {
+        transform:scale(2.5);
+        -ms-transform:scale(2.5);
+        -moz-transform:scale(2.5);
+        -webkit-transform:scale(2.5);
+        -o-transform:scale(2.5);
+        z-index: 999;
+/*
+        position: absolute;
+        max-width: none;
+        left: -50%;
+*/
+      }
+
+      .img_zoom.mini img:hover {
+        transform:scale(4);
+        -ms-transform:scale(4);
+        -moz-transform:scale(4);
+        -webkit-transform:scale(4);
+        -o-transform:scale(4);
+      }
+
+    </style>
   </head>
   <body>
     <div id="app"></div>

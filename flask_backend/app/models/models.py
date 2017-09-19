@@ -50,9 +50,10 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
     columns = [column[0] for column in cur.description]
     pretty_results = []
     for row in result:
-      #pretty_results.append(dict(zip(columns, row)))
-      dict_row = {k: json.loads(v) if (isinstance(v, str) and v[0] == '[') else v for k, v in dict(row).items()}
-      pretty_results.append(dict_row)
+      if set(dict(row).values()) != {None}:
+        #pretty_results.append(dict(zip(columns, row)))
+        dict_row = {k: json.loads(v) if (isinstance(v, str) and v[0] == '[') else v for k, v in dict(row).items()}
+        pretty_results.append(dict_row)
   return pretty_results
 
 def select_item_by_id(model, id, associations=[]):

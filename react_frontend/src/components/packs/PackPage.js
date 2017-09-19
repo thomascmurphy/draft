@@ -18,19 +18,27 @@ class PackPage extends React.Component {
     this.savePick = this.savePick.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount() {console.log('componentDidMount');
     this.props.actions.loadPackCards(this.state.hash);
     this.props.actions.loadDeckCards(this.state.hash);
+    this.props.actions.preloadImages(this.state.hash);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.pack.id != nextProps.pack.id) {
+  componentWillReceiveProps(nextProps) {console.log('will receive props', this.props, nextProps);
+    if (this.props.hash != nextProps.hash) {
+      console.log('receiveprops: player', nextProps);
+      this.setState({hash: nextProps.hash});
+    }
+    if (JSON.stringify(this.props.pack) != JSON.stringify(nextProps.pack)) {
+      console.log('receiveprops: load pack', nextProps);
       this.setState({pack: nextProps.pack});
     }
-    if (this.props.packCards != nextProps.packCards) {
+    if (JSON.stringify(this.props.packCards) != JSON.stringify(nextProps.packCards)) {
+      console.log('receiveprops: load pack cards', this.props.packCards, nextProps.packCards);
       this.setState({packCards: nextProps.packCards});
     }
-    if (this.props.deckCards != nextProps.deckCards) {
+    if (JSON.stringify(this.props.deckCards) != JSON.stringify(nextProps.deckCards)) {
+      console.log('receiveprops: load deck cards', this.props.deckCards, nextProps.deckCards);
       this.setState({deckCards: nextProps.deckCards});
     }
   }
@@ -45,11 +53,17 @@ class PackPage extends React.Component {
   render() {
     const packCards = this.props.packCards;
     const deckCards = this.props.deckCards;
+    var pack_title = 'Your Pack';
+    var pack_card_list = <p>Waiting for your next pack to be passed</p>;
+    if (this.props.pack.number > 0) {
+      pack_title = "Pack #" + this.props.pack.number;
+      pack_card_list = <PackCardList packCards={packCards} onClick={this.savePick} />;
+    }
     return (
       <div className="row">
         <div className="col-md-6">
-          <h1>Pack #{this.props.pack.number}</h1>
-          <PackCardList packCards={packCards} onClick={this.savePick} />
+          <h1>{pack_title}</h1>
+          {pack_card_list}
         </div>
         <div className="col-md-6">
           <h1>Your Deck</h1>
@@ -74,19 +88,20 @@ function collectPackCards(packCards, pack) {
       return packCard;
     }
   });
+  console.log('collect:', selected);
   return selected.filter(el => el != undefined);
 }
 
 function mapStateToProps(state, ownProps) {
   let pack = {set_code: '', number: 0, complete: false};
   let packCards = [];
-  let deckCards = [];
+  let deckCards = state.deckCards.length > 0 ? state.deckCards : [];
   const hash = ownProps.params.hash;
+  console.log('state', state);
   if (state.packs.length > 0 && state.packCards.length > 0) {
     let packId = state.packCards[0].pack_id;
-    pack = Object.assign({}, state.packs.find(pack => pack.id == packId));
+    pack = Object.assign({}, state.packs.find(pack => pack ? pack.id == packId : false));
     packCards = collectPackCards(state.packCards, pack);
-    deckCards = state.deckCards;
   }
   return {pack: pack, packCards: packCards, deckCards: deckCards, hash: hash};
 }

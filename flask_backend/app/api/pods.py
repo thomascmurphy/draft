@@ -4,7 +4,7 @@
 import ast
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-from ..models import Pod, Pack, PackCard, Player
+from ..models import Pod, Pack, PackCard, Player, Deck
 
 pods = Blueprint('pods', __name__, url_prefix='/api/v1/pods')
 import pdb
@@ -23,7 +23,14 @@ def get_pods():
 @pods.route('/<int:pod_id>', methods=['GET'])
 def get_pod(pod_id):
     pod = Pod.get_pod_by_id(pod_id)
-    return jsonify({'pod': pod}), 201
+    players = Player.get_players(["pod_id=%i" % pod_id])
+    player_ids = [player['id'] for player in players]
+    decks = Deck.get_decks(["player_id IN (%s)" % ','.join(list(map(str, player_ids)))])
+    packs = Pack.get_packs(["player_id IN (%s)" % ','.join(list(map(str, player_ids)))])
+    pack_ids = [pack['id'] for pack in packs]
+    pack_cards = PackCard.get_pack_cards(["pack_id IN (%s)" % ','.join(list(map(str, pack_ids)))])
+    pack_cards = PackCard.add_card_images_to_pack_cards(pack_cards)
+    return jsonify({'pod': pod, 'players': players, 'packs': packs, 'decks': decks, 'pack_cards': pack_cards}), 201
 
 @pods.route('/', methods=['POST'])
 def create_pod():

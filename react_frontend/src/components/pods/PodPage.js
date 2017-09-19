@@ -2,21 +2,23 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as podActions from '../../actions/podActions';
-import PlayerList from '../players/PlayerList';
+import PodPlayerList from '../players/PodPlayerList';
 import PodForm from './PodForm';
 
 class PodPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      isEditing: false,
       pod: this.props.pod,
-      podPlayers: this.props.podPlayers,
-      saving: false
+      players: this.props.players,
+      pickNumber: 1
     };
-    this.updatePodState = this.updatePodState.bind(this);
-    this.savePod = this.savePod.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
+    this.changePickNumber = this.changePickNumber.bind(this);
+  }
+
+  componentDidMount() {
+    let podId = this.props.params.podId;
+    this.props.actions.loadPod(podId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,45 +27,29 @@ class PodPage extends React.Component {
     }
   }
 
-  toggleEdit() {
-    this.setState({isEditing: !this.state.isEditing});
+  changePickNumber(event) {
+    this.props.dispatch({pickNumber: event.target.value});
   }
-
-  updatePodState(event) {
-    const field = event.target.name;
-    const pod = this.state.pod;
-    pod[field] = event.target.value;
-    return this.setState({pod: pod});
-  }
-
-  savePod(event) {
-    event.preventDefault();
-    this.setState({saving: true});
-    this.props.actions.updatePod(this.state.pod);
-  }
-
 
   render() {
-    if (this.state.isEditing) {
     return (
       <div>
-        <h1>edit pod</h1>
-        <PodForm
-          pod={this.state.pod}
-          players={this.state.podPlayers}
-          onSave={this.savePod}
-          onChange={this.updatePodState}
-          onPlayerChange={this.updatePodHobbies}
-          saving={this.state.saving}/>
-      </div>
-      );
-    }
-    return (
-      <div className="col-md-8 col-md-offset-2">
-        <h1>{this.props.pod.name}</h1>
-        <p>pack sets: {this.props.pod.pack_sets}</p>
-        <PlayerList players={this.props.podPlayers} />
-        <button onClick={this.toggleEdit}>edit</button>
+        <div className="row">
+          <div className="col-md-5">
+            <h1>{this.props.pod.name}</h1>({this.state.pickNumber})
+          </div>
+          <div className="col-md-2">
+            pack sets: {this.props.pod.pack_sets}
+          </div>
+          <div className="col-md-5">
+            <input type="range" name="pickNumber" onChange={this.changePickNumber} defaultValue={this.state.pickNumber} min="1" max="45" step="1"/>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <PodPlayerList players={this.props.players} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -71,13 +57,25 @@ class PodPage extends React.Component {
 
 PodPage.propTypes = {
   pod: PropTypes.object.isRequired,
-  podPlayers: PropTypes.array.isRequired,
+  players: PropTypes.array.isRequired,
+  pickNumber: PropTypes.number.isRequired,
   actions: PropTypes.object.isRequired
 };
 
-function collectPodPlayers(players, pod) {
+function collectPodPlayers(pickNumber, pod, players, packs, decks, packCards) {
   let selected = players.map(player => {
-    if (pod.player_ids.filter(playerId => playerId == player.id).length > 0) {
+    if (player.pod_id == pod.id) {
+      let playerDeck = Object.assign({}, decks.find(deck => deck.player_id == player.id));
+      let playerPick = Object.assign({}, packCards.find(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number == pickNumber));
+      let playerPack = Object.assign({}, packs.find(pack => pack.id == playerPick.pack_id));
+      let playerPackCards = Object.assign([], packCards.filter(packCard => packCard.pack_id == playerPack.id && (!packCard.pick_number || packCard.pick_number > pickNumber)));
+      let playerDeckCards = Object.assign([], packCards.filter(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number < pickNumber));
+      player['pick'] = playerPick;
+      player['pack'] = playerPack;
+      player['deck'] = playerDeck;
+      player['pack_cards'] = playerPackCards;
+      player['deck_cards'] = playerDeckCards;
+      console.log(player);
       return player;
     }
   });
@@ -86,21 +84,22 @@ function collectPodPlayers(players, pod) {
 
 function mapStateToProps(state, ownProps) {
   let pod = {name: '', pack_sets: '', player_ids: []};
-  let podPlayers = [];
-  const podId = ownProps.params.id;
+  let players = [];
+  let pickNumber = state.pickNumber || 2;
+  const podId = ownProps.params.podId;
   if (state.pods.length > 0) {
     pod = Object.assign({}, state.pods.find(pod => pod.id == podId));
     if (pod.player_ids.length > 0) {
-      podPlayers = collectPodPlayers(state.players, pod);
+      players = collectPodPlayers(pickNumber, pod, state.players, state.packs, state.decks, state.packCards);
     }
   }
-  return {pod: pod, podPlayers: podPlayers};
+  return {pod: pod, players: players, pickNumber: pickNumber};
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(podActions, dispatch)
-  };
+  const boundActionCreators = bindActionCreators(podActions, dispatch);
+  const allActionProps = {...boundActionCreators, dispatch};
+  return allActionProps;
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PodPage);
