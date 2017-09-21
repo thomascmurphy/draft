@@ -16,7 +16,7 @@ class PackCardList extends React.Component {
         </div>
     );
   }
-};
+}
 
 PackCardList.propTypes = {
   packCards: PropTypes.array.isRequired,

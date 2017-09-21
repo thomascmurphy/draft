@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import { createSelectorCreator, defaultMemoize } from 'reselect'
+import isEqual from 'lodash.isequal'
+//import { collectPodPlayers } from '../../selectors'
 import * as podActions from '../../actions/podActions';
 import PodPlayerList from '../players/PodPlayerList';
 import PodForm from './PodForm';
@@ -28,7 +31,9 @@ class PodPage extends React.Component {
   }
 
   changePickNumber(event) {
-    this.props.dispatch({pickNumber: event.target.value});
+    this.setState({pickNumber: event.target.value});
+    console.log(this.state);
+    //this.props.dispatch({pickNumber: event.target.value});
   }
 
   render() {
@@ -62,6 +67,15 @@ PodPage.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
+const getPickNumber = (state, props) => state.pickNumber;
+const getPods = (state, props) => state.pods;
+const getPodId = (state, props) => props.params.podId;
+const getPlayers = (state, props) => state.players;
+const getPacks = (state, props) => state.packs;
+const getDecks = (state, props) => state.decks;
+const getPackCards = (state, props) => state.packCards;
+
+/*
 function collectPodPlayers(pickNumber, pod, players, packs, decks, packCards) {
   let selected = players.map(player => {
     if (player.pod_id == pod.id) {
@@ -81,25 +95,47 @@ function collectPodPlayers(pickNumber, pod, players, packs, decks, packCards) {
   });
   return selected.filter(el => el != undefined);
 }
+*/
+
+// create a "selector creator" that uses lodash.isEqual instead of ===
+const createDeepEqualSelector = createSelectorCreator(
+  defaultMemoize,
+  isEqual
+)
+
+const collectPodPlayers = createDeepEqualSelector(
+  [getPickNumber, getPodId, getPods, getPlayers, getPacks, getDecks, getPackCards],
+  (pickNumber, podId, pods, players, packs, decks, packCards) => {
+    console.log(pickNumber, podId, pods, players, packs, decks, packCards);
+    if (!pickNumber) {pickNumber = 1;}
+    let pod = Object.assign({}, pods.find(pod => pod.id == podId));
+    let selected = players.map(player => {
+      if (player.pod_id == pod.id) {
+        let playerDeck = Object.assign({}, decks.find(deck => deck.player_id == player.id));
+        let playerPick = Object.assign({}, packCards.find(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number == pickNumber));
+        let playerPack = Object.assign({}, packs.find(pack => pack.id == playerPick.pack_id));
+        let playerPackCards = Object.assign([], packCards.filter(packCard => packCard.pack_id == playerPack.id && (!packCard.pick_number || packCard.pick_number > pickNumber)));
+        let playerDeckCards = Object.assign([], packCards.filter(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number < pickNumber));
+        player['pick'] = playerPick;
+        player['pack'] = playerPack;
+        player['deck'] = playerDeck;
+        player['pack_cards'] = playerPackCards;
+        player['deck_cards'] = playerDeckCards;
+        return player;
+      }
+    });
+    return {pod: pod, players: selected.filter(el => el != undefined), pickNumber: pickNumber};
+  }
+);
 
 function mapStateToProps(state, ownProps) {
-  let pod = {name: '', pack_sets: '', player_ids: []};
-  let players = [];
-  let pickNumber = state.pickNumber || 2;
-  const podId = ownProps.params.podId;
-  if (state.pods.length > 0) {
-    pod = Object.assign({}, state.pods.find(pod => pod.id == podId));
-    if (pod.player_ids.length > 0) {
-      players = collectPodPlayers(pickNumber, pod, state.players, state.packs, state.decks, state.packCards);
-    }
-  }
-  return {pod: pod, players: players, pickNumber: pickNumber};
+  return collectPodPlayers(state, ownProps);
 }
 
 function mapDispatchToProps(dispatch) {
-  const boundActionCreators = bindActionCreators(podActions, dispatch);
-  const allActionProps = {...boundActionCreators, dispatch};
-  return allActionProps;
+  return {
+    actions: bindActionCreators(podActions, dispatch)
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PodPage);

@@ -13,7 +13,7 @@ class DeckCardList extends React.Component {
         </div>
     );
   }
-};
+}
 
 DeckCardList.propTypes = {
   deckCards: PropTypes.array.isRequired
