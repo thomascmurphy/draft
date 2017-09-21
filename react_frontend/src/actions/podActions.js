@@ -2,6 +2,18 @@ import * as types from './actionTypes';
 import podApi from '../api/podApi';
 import {loadPackCardsSuccess, loadPlayersSuccess, filterPacksSuccess, filterDecksSuccess} from './playerActions'
 
+export function updatePodSuccess(pod) {
+  return {type: types.UPDATE_POD_SUCCESS, pod};
+}
+
+export function loadPodsSuccess(pods) {
+  return {type: types.LOAD_PODS_SUCCESS, pods};
+}
+
+export function loadSetSuccess(sets) {
+  return {type: types.LOAD_SETS_SUCCESS, sets};
+}
+
 export function loadPods() {
   return function(dispatch) {
     return podApi.getAllPods().then(pods => {
@@ -26,10 +38,6 @@ export function loadPod(podId) {
   };
 }
 
-export function loadPodsSuccess(pods) {
-  return {type: types.LOAD_PODS_SUCCESS, pods};
-}
-
 export function updatePod(pod) {
   return function (dispatch) {
     return podApi.updatePod(pod).then(response => {
@@ -40,6 +48,12 @@ export function updatePod(pod) {
   };
 }
 
-export function updatePodSuccess(pod) {
-  return {type: types.UPDATE_POD_SUCCESS, pod};
+export function loadSets() {
+  return function(dispatch) {
+    return podApi.getAllSets().then(sets => {
+      dispatch(loadSetsSuccess(sets));
+    }).catch(error => {
+      throw(error);
+    });
+  };
 }

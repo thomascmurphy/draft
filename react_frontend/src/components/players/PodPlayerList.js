@@ -11,7 +11,7 @@ const PodPlayerList = ({players}) => {
               <h2>{player.name} ({player.email})</h2>
             </div>
           </div>
-          <div className="row" key={player.id}>
+          <div className="row">
             <div className="col-sm-5">
               <h4>Pack {player.pack.number}</h4>
               <DeckCardList deckCards={player.pack_cards} />

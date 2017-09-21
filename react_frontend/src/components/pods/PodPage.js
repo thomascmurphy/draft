@@ -62,7 +62,7 @@ class PodPage extends React.Component {
             <h1>{this.state.pod.name}</h1>({this.state.pickNumber})
           </div>
           <div className="col-md-2">
-            pack sets: {this.state.pod.pack_sets}
+            pack sets: {this.state.pod.pack_1_set}, {this.state.pod.pack_2_set}, {this.state.pod.pack_3_set}
           </div>
           <div className="col-md-5">
             <input type="range" name="pickNumber" onChange={this.changePickNumber} defaultValue={this.state.pickNumber} min="1" max="45" step="1"/>
@@ -153,7 +153,7 @@ function collectPodPlayers(state, props, pickNumber) {
 
 
 function mapStateToProps(state, ownProps) {
-  let pod = {name: '', pack_sets: '', player_ids: []};
+  let pod = {name: '', pack_1_set: '', pack_2_set: '', pack_3_set: '', player_ids: []};
   let players = [];
   let pickNumber = state.pickNumber || 1;
   if (state.pods.length > 0) {

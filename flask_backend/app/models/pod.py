@@ -2,8 +2,6 @@ from .models import *
 from .player import Player
 from .pack import Pack
 
-fields = ['name', 'pack_sets']
-
 class Pod():
     #methods
     @staticmethod
@@ -17,10 +15,9 @@ class Pod():
         return pod
 
     @staticmethod
-    def create_pod(name, pack_sets, player_emails):
-        # clean_params_pod = {field:params[field] for param in fields}
-        pod = insert_item('pods', {'name': name, 'pack_sets': pack_sets})
-        packs_array = ast.literal_eval(pack_sets)
+    def create_pod(name, pack_1_set, pack_2_set, pack_3_set, player_emails):
+        pod = insert_item('pods', {'name': name, 'pack_1_set': pack_1_set, 'pack_2_set': pack_2_set, 'pack_3_set': pack_3_set})
+        packs_array = [pack_1_set, pack_2_set, pack_3_set]
         for player_email in player_emails:
             player = Player.create_player(player_email, pod['id'])
             for counter,set_code in enumerate(packs_array):

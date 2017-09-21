@@ -35,9 +35,11 @@ def get_pod(pod_id):
 @pods.route('/', methods=['POST'])
 def create_pod():
     name = request.form['name']
-    pack_sets = request.form['pack_sets']
+    pack_1_set = request.form['pack_1_set']
+    pack_2_set = request.form['pack_2_set']
+    pack_3_set = request.form['pack_3_set']
     player_emails = ast.literal_eval(request.form['player_emails'])
-    pod = Pod.create_pod(name, pack_sets, player_emails)
+    pod = Pod.create_pod(name, pack_1_set, pack_2_set, pack_3_set, player_emails)
     return jsonify({'pod': pod}), 201
 
 @pods.route('/<int:pod_id>', methods=['DELETE'])

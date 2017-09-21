@@ -31,19 +31,16 @@ class PlayerApi {
     formData.append('pack_card_id', packCardId);
     const request = new Request(`${process.env.API_HOST}/api/v1/players/pick`, {
       method: 'post',
-      headers: new Headers({'Accept': 'application/json', 'Content-Type': 'application/json'}),
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
       body: JSON.stringify({pack_card_id: packCardId}),
       mode: 'cors'
     });
 
     return fetch(request).then(response => {
       return response.json();
-/*
-      response.json().then(json => {
-        console.log('pick response json:', json);
-        return json;
-      });
-*/
     }).catch(error => {
       return error;
     });

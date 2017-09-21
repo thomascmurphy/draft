@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import TextInput from '../common/TextInput';
+import Select from '../common/Select';
 
 class PodForm extends React.Component {
   constructor(props) {
@@ -29,11 +30,23 @@ class PodForm extends React.Component {
             value={this.props.pod.name}
             onChange={this.props.onChange}/>
 
-          <TextInput
-            name="packSets"
-            label="Pack Sets"
-            value={this.props.pod.packSets}
-            onChange={this.props.onChange}/>
+          <Select
+            name="pack_1_set"
+            label="First Pack Set"
+            options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+          />
+
+           <Select
+             name="pack_2_set"
+             label="Second Pack Set"
+             options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+           />
+
+            <Select
+              name="pack_3_set"
+              label="Third Pack Set"
+              options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+            />
 
           {players}
 
@@ -51,6 +64,7 @@ class PodForm extends React.Component {
 PodForm.propTypes = {
   pod: React.PropTypes.object.isRequired,
   players: React.PropTypes.array.isRequired,
+  sets: React.PropTypes.array.isRequired,
   onSave: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func.isRequired,
   onPlayerChange: React.PropTypes.func.isRequired,

@@ -5,6 +5,7 @@ import packs from './packReducer';
 import packCards from './packCardReducer';
 import deckCards from './deckCardReducer';
 import decks from './deckReducer';
+import sets from './setReducer';
 
 const rootReducer = combineReducers({
   // short hand property names
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   packs,
   packCards,
   deckCards,
-  decks
+  decks,
+  sets
 });
 
 export default rootReducer;

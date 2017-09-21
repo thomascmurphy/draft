@@ -13,7 +13,9 @@ drop table if exists pods;
 create table pods (
   id integer primary key autoincrement,
   name text,
-  pack_sets text
+  pack_1_set text,
+  pack_2_set text,
+  pack_3_set text
 );
 
 drop table if exists players;
