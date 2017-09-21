@@ -11,11 +11,11 @@ import PodForm from './PodForm';
 class PodPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      pod: this.props.pod,
-      players: this.props.players,
-      pickNumber: 1
-    };
+    // this.state = {
+    //   pod: this.props.pod,
+    //   players: this.props.players,
+    //   pickNumber: 1
+    // };
     this.changePickNumber = this.changePickNumber.bind(this);
   }
 
@@ -32,8 +32,9 @@ class PodPage extends React.Component {
 
   changePickNumber(event) {
     this.setState({pickNumber: event.target.value});
+    let players = collectPodPlayers(this.state, this.props);
+    this.setState({players: players});
     console.log(this.state);
-    //this.props.dispatch({pickNumber: event.target.value});
   }
 
   render() {
@@ -52,7 +53,7 @@ class PodPage extends React.Component {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <PodPlayerList players={this.props.players} />
+            <PodPlayerList players={this.state.players} />
           </div>
         </div>
       </div>
@@ -70,13 +71,21 @@ PodPage.propTypes = {
 const getPickNumber = (state, props) => state.pickNumber;
 const getPods = (state, props) => state.pods;
 const getPodId = (state, props) => props.params.podId;
+const getPod = (state, props) => Object.assign({}, state.pods.find(pod => pod.id == props.params.podId));
 const getPlayers = (state, props) => state.players;
 const getPacks = (state, props) => state.packs;
 const getDecks = (state, props) => state.decks;
 const getPackCards = (state, props) => state.packCards;
 
-/*
-function collectPodPlayers(pickNumber, pod, players, packs, decks, packCards) {
+
+function collectPodPlayers(state, props) {
+  let pickNumber = getPickNumber(state, props);
+  let pod = getPod(state, props);
+  let players = getPlayers(state, props);
+  let packs = getPacks(state, props);
+  let decks = getDecks(state, props);
+  let packCards = getPackCards(state, props);
+
   let selected = players.map(player => {
     if (player.pod_id == pod.id) {
       let playerDeck = Object.assign({}, decks.find(deck => deck.player_id == player.id));
@@ -89,47 +98,55 @@ function collectPodPlayers(pickNumber, pod, players, packs, decks, packCards) {
       player['deck'] = playerDeck;
       player['pack_cards'] = playerPackCards;
       player['deck_cards'] = playerDeckCards;
-      console.log(player);
       return player;
     }
   });
   return selected.filter(el => el != undefined);
 }
-*/
+
 
 // create a "selector creator" that uses lodash.isEqual instead of ===
-const createDeepEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  isEqual
-)
+// const createDeepEqualSelector = createSelectorCreator(
+//   defaultMemoize,
+//   isEqual
+// )
+//
+// const collectPodPlayers = createDeepEqualSelector(
+//   [getPickNumber, getPodId, getPods, getPlayers, getPacks, getDecks, getPackCards],
+//   (pickNumber, podId, pods, players, packs, decks, packCards) => {
+//     console.log(pickNumber, podId, pods, players, packs, decks, packCards);
+//     if (!pickNumber) {pickNumber = 1;}
+//     let pod = Object.assign({}, pods.find(pod => pod.id == podId));
+//     let selected = players.map(player => {
+//       if (player.pod_id == pod.id) {
+//         let playerDeck = Object.assign({}, decks.find(deck => deck.player_id == player.id));
+//         let playerPick = Object.assign({}, packCards.find(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number == pickNumber));
+//         let playerPack = Object.assign({}, packs.find(pack => pack.id == playerPick.pack_id));
+//         let playerPackCards = Object.assign([], packCards.filter(packCard => packCard.pack_id == playerPack.id && (!packCard.pick_number || packCard.pick_number > pickNumber)));
+//         let playerDeckCards = Object.assign([], packCards.filter(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number < pickNumber));
+//         player['pick'] = playerPick;
+//         player['pack'] = playerPack;
+//         player['deck'] = playerDeck;
+//         player['pack_cards'] = playerPackCards;
+//         player['deck_cards'] = playerDeckCards;
+//         return player;
+//       }
+//     });
+//     return {pod: pod, players: selected.filter(el => el != undefined), pickNumber: pickNumber};
+//   }
+// );
 
-const collectPodPlayers = createDeepEqualSelector(
-  [getPickNumber, getPodId, getPods, getPlayers, getPacks, getDecks, getPackCards],
-  (pickNumber, podId, pods, players, packs, decks, packCards) => {
-    console.log(pickNumber, podId, pods, players, packs, decks, packCards);
-    if (!pickNumber) {pickNumber = 1;}
-    let pod = Object.assign({}, pods.find(pod => pod.id == podId));
-    let selected = players.map(player => {
-      if (player.pod_id == pod.id) {
-        let playerDeck = Object.assign({}, decks.find(deck => deck.player_id == player.id));
-        let playerPick = Object.assign({}, packCards.find(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number == pickNumber));
-        let playerPack = Object.assign({}, packs.find(pack => pack.id == playerPick.pack_id));
-        let playerPackCards = Object.assign([], packCards.filter(packCard => packCard.pack_id == playerPack.id && (!packCard.pick_number || packCard.pick_number > pickNumber)));
-        let playerDeckCards = Object.assign([], packCards.filter(packCard => packCard.deck_id == playerDeck.id && packCard.pick_number < pickNumber));
-        player['pick'] = playerPick;
-        player['pack'] = playerPack;
-        player['deck'] = playerDeck;
-        player['pack_cards'] = playerPackCards;
-        player['deck_cards'] = playerDeckCards;
-        return player;
-      }
-    });
-    return {pod: pod, players: selected.filter(el => el != undefined), pickNumber: pickNumber};
-  }
-);
 
 function mapStateToProps(state, ownProps) {
-  return collectPodPlayers(state, ownProps);
+  let pod = {name: '', pack_sets: '', player_ids: []};
+  let players = [];
+  let pickNumber = state.pickNumber || 1;
+  if (state.pods.length > 0) {
+    if (pod.player_ids.length > 0) {
+      players = collectPodPlayers(state, ownProps);
+    }
+  }
+  return {pod: pod, players: players, pickNumber: pickNumber};
 }
 
 function mapDispatchToProps(dispatch) {
