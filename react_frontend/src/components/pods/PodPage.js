@@ -11,11 +11,14 @@ import PodForm from './PodForm';
 class PodPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-    // this.state = {
-    //   pod: this.props.pod,
-    //   players: this.props.players,
-    //   pickNumber: 1
-    // };
+    this.state = {
+      pod: {},
+      players: [],
+      packs: [],
+      decks: [],
+      packCards: [],
+      pickNumber: 1
+    };
     this.changePickNumber = this.changePickNumber.bind(this);
   }
 
@@ -28,13 +31,27 @@ class PodPage extends React.Component {
     if (this.props.pod.id != nextProps.pod.id) {
       this.setState({pod: nextProps.pod});
     }
+    if (JSON.stringify(this.props.players) != JSON.stringify(nextProps.players)) {
+      this.setState({players: nextProps.players});
+    }
+    if (JSON.stringify(this.props.packs) != JSON.stringify(nextProps.packs)) {
+      this.setState({packs: nextProps.packs});
+    }
+    if (JSON.stringify(this.props.decks) != JSON.stringify(nextProps.decks)) {
+      this.setState({decks: nextProps.decks});
+    }
+    if (JSON.stringify(this.props.packCards) != JSON.stringify(nextProps.packCards)) {
+      this.setState({packCards: nextProps.packCards});
+    }
+    if (this.props.pickNumber != nextProps.pickNumber) {
+      this.setState({pickNumber: nextProps.pickNumber});
+    }
   }
 
   changePickNumber(event) {
     this.setState({pickNumber: event.target.value});
-    let players = collectPodPlayers(this.state, this.props);
+    let players = collectPodPlayers(this.state, this.props, event.target.value);
     this.setState({players: players});
-    console.log(this.state);
   }
 
   render() {
@@ -42,10 +59,10 @@ class PodPage extends React.Component {
       <div>
         <div className="row">
           <div className="col-md-5">
-            <h1>{this.props.pod.name}</h1>({this.state.pickNumber})
+            <h1>{this.state.pod.name}</h1>({this.state.pickNumber})
           </div>
           <div className="col-md-2">
-            pack sets: {this.props.pod.pack_sets}
+            pack sets: {this.state.pod.pack_sets}
           </div>
           <div className="col-md-5">
             <input type="range" name="pickNumber" onChange={this.changePickNumber} defaultValue={this.state.pickNumber} min="1" max="45" step="1"/>
@@ -68,18 +85,16 @@ PodPage.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
-const getPickNumber = (state, props) => state.pickNumber;
 const getPods = (state, props) => state.pods;
 const getPodId = (state, props) => props.params.podId;
-const getPod = (state, props) => Object.assign({}, state.pods.find(pod => pod.id == props.params.podId));
+const getPod = (state, props) => state.pod || Object.assign({}, state.pods.find(pod => pod.id == props.params.podId));
 const getPlayers = (state, props) => state.players;
 const getPacks = (state, props) => state.packs;
 const getDecks = (state, props) => state.decks;
 const getPackCards = (state, props) => state.packCards;
 
 
-function collectPodPlayers(state, props) {
-  let pickNumber = getPickNumber(state, props);
+function collectPodPlayers(state, props, pickNumber) {
   let pod = getPod(state, props);
   let players = getPlayers(state, props);
   let packs = getPacks(state, props);
@@ -142,11 +157,11 @@ function mapStateToProps(state, ownProps) {
   let players = [];
   let pickNumber = state.pickNumber || 1;
   if (state.pods.length > 0) {
-    if (pod.player_ids.length > 0) {
-      players = collectPodPlayers(state, ownProps);
-    }
+    pod = Object.assign({}, state.pods.find(pod => pod.id == ownProps.params.podId));
+    players = collectPodPlayers(state, ownProps, pickNumber);
   }
-  return {pod: pod, players: players, pickNumber: pickNumber};
+  let props = {pod: pod, players: players, packs: state.packs, decks: state.decks, packCards: state.packCards, pickNumber: pickNumber};
+  return props;
 }
 
 function mapDispatchToProps(dispatch) {
