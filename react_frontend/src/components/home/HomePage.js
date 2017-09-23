@@ -14,10 +14,19 @@ class HomePage extends React.Component {
     this.state = {
       email: '',
       saving: false,
-      pod: {name: '', players: [], pack_1_set: '', pack_2_set: '', pack_3_set: ''}
+      pod: {
+        name: '',
+        pack_1_set: 'HOU',
+        pack_2_set: 'HOU',
+        pack_3_set: 'AKH',
+        players: [{email: ''}, {email: ''}, {email: ''}, {email: ''}, {email: ''}, {email: ''}, {email: ''}, {email: ''}]
+      }
     };
     this.updateEmailState = this.updateEmailState.bind(this);
     this.filterPlayers = this.filterPlayers.bind(this);
+    this.createPod = this.createPod.bind(this);
+    this.updatePodState = this.updatePodState.bind(this);
+    this.updatePlayerState = this.updatePlayerState.bind(this);
   }
 
   updateEmailState(event) {
@@ -47,32 +56,54 @@ class HomePage extends React.Component {
     return this.setState({pod: pod});
   }
 
+  updatePlayerState(event) {
+    const playerIndex = event.currentTarget.getAttribute('data-custom');
+    const field = event.target.name;
+    const pod = this.state.pod;
+    pod.players[playerIndex][field] = event.target.value;
+    return this.setState({pod: pod});
+  }
+
   render() {
     return (
       <div>
-        <div className="jumbotron">
-          <h1>Draft Academy</h1>
-          <p>draft with friends.</p>
+        <div className="page-header">
+          <h1>Draft Academy <small>Draft with friends and learn from their picks</small></h1>
         </div>
         <div className="row">
           <div className="col-sm-6">
-            <h1>Continue Draft</h1>
-            <EmailForm
-              email={this.state.email}
-              onSave={this.filterPlayers}
-              onChange={this.updateEmailState}
-              saving={this.state.saving}/>
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <h3 className="panel-title">Continue Draft</h3>
+              </div>
+              <div className="panel-body">
+                <EmailForm
+                  email={this.state.email}
+                  onSave={this.filterPlayers}
+                  onChange={this.updateEmailState}
+                  saving={this.state.saving}/>
+              </div>
+            </div>
           </div>
+
           <div className="col-sm-6">
-            <h1>Start New Draft</h1>
-            <PodForm
-              pod={this.state.pod}
-              players={this.state.pod.players}
-              sets={this.props.sets}
-              onSave={this.createPod}
-              onChange={this.updatePod}
-              saving={this.state.saving}/>
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <h3 className="panel-title">Start New Draft</h3>
+              </div>
+              <div className="panel-body">
+                <PodForm
+                  pod={this.state.pod}
+                  players={this.state.players}
+                  sets={this.props.sets}
+                  onSave={this.createPod}
+                  onChange={this.updatePodState}
+                  onPlayerChange={this.updatePlayerState}
+                  saving={this.state.saving}/>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     );
@@ -99,7 +130,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(playerActions, podActions, dispatch)
+    actions: bindActionCreators(Object.assign({}, playerActions, podActions), dispatch)
   };
 }
 

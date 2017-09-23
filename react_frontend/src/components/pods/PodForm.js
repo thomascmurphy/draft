@@ -5,47 +5,67 @@ import Select from '../common/Select';
 class PodForm extends React.Component {
   constructor(props) {
     super(props);
-    this.makeCheckBoxes = this.makeCheckBoxes.bind(this);
+    this.makePlayerInputs = this.makePlayerInputs.bind(this);
   }
 
-  makePlayerBoxes() {
-    return this.props.players.map(player => {
+  makePlayerInputs() {
+    return this.props.pod.players.map((player, index) => {
       return (
-        <TextInput
-          item={player.id}
-          handleChange={this.props.onPlayerChange}
-          key={player.id}/>
+        <div className="row" key={index}>
+          <div className="col-xs-6">
+            <TextInput
+              name="email"
+              label={index == 0 ? "Your Email" : "Player " + index + " Email"}
+              onChange={this.props.onPlayerChange}
+              customValue={index.toString()}
+            />
+          </div>
+          <div className="col-xs-6">
+            <TextInput
+              name="name"
+              label={index == 0 ? "Your Name" : "Player " + index + " Name"}
+              onChange={this.props.onPlayerChange}
+              customValue={index.toString()}
+            />
+          </div>
+        </div>
       );
     });
   }
 
   render() {
-    const players = this.makePlayerBoxes();
+    const players = this.makePlayerInputs();
     return (
       <div>
         <form>
           <TextInput
             name="name"
-            label="name"
+            label="Pod Name"
             value={this.props.pod.name}
             onChange={this.props.onChange}/>
 
           <Select
             name="pack_1_set"
             label="First Pack Set"
-            options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+            value={this.props.pod.pack_1_set}
+            options={this.props.sets.map(function(set) {return {value: set.code, display: set.name, selected: false}} )}
+            onChange={this.props.onChange}
           />
 
            <Select
              name="pack_2_set"
              label="Second Pack Set"
-             options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+             value={this.props.pod.pack_2_set}
+             options={this.props.sets.map(function(set) {return {value: set.code, display: set.name, selected: false}} )}
+             onChange={this.props.onChange}
            />
 
             <Select
               name="pack_3_set"
               label="Third Pack Set"
-              options={this.props.sets.map((set) => {value: set.code, display: set.name, selected: false})}
+              value={this.props.pod.pack_3_set}
+              options={this.props.sets.map(function(set) {return {value: set.code, display: set.name, selected: false}} )}
+              onChange={this.props.onChange}
             />
 
           {players}
@@ -63,7 +83,6 @@ class PodForm extends React.Component {
 
 PodForm.propTypes = {
   pod: React.PropTypes.object.isRequired,
-  players: React.PropTypes.array.isRequired,
   sets: React.PropTypes.array.isRequired,
   onSave: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func.isRequired,

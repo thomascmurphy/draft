@@ -7,12 +7,12 @@ class PodsPage extends React.Component {
   render() {
     const pods = this.props.pods;
     return (
-      <div className="col-md-12">
-        <h1>Pods</h1>
-        <div className="col-md-4">
+      <div className="row">
+        <h1>Your Pods</h1>
+        <div className="col-md-6">
           <PodList pods={pods} />
         </div>
-        <div className="col-md-8">
+        <div className="col-md-6">
           {this.props.children}
         </div>
       </div>

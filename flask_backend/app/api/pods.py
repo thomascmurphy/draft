@@ -32,13 +32,15 @@ def get_pod(pod_id):
     pack_cards = PackCard.add_card_images_to_pack_cards(pack_cards)
     return jsonify({'pod': pod, 'players': players, 'packs': packs, 'decks': decks, 'pack_cards': pack_cards}), 201
 
-@pods.route('/', methods=['POST'])
+@pods.route('', methods=['POST'])
 def create_pod():
-    name = request.form['name']
-    pack_1_set = request.form['pack_1_set']
-    pack_2_set = request.form['pack_2_set']
-    pack_3_set = request.form['pack_3_set']
-    player_emails = ast.literal_eval(request.form['player_emails'])
+    pod_json = request.json['pod']
+    name = pod_json['name']
+    pack_1_set = pod_json['pack_1_set']
+    pack_2_set = pod_json['pack_2_set']
+    pack_3_set = pod_json['pack_3_set']
+#     player_emails = ast.literal_eval(request.json['player_emails'])
+    player_emails = filter(None, request.json['player_emails'])
     pod = Pod.create_pod(name, pack_1_set, pack_2_set, pack_3_set, player_emails)
     return jsonify({'pod': pod}), 201
 

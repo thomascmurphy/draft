@@ -13,7 +13,7 @@ const PodPlayerList = ({players}) => {
           </div>
           <div className="row">
             <div className="col-sm-5">
-              <h4>Pack {player.pack.number}</h4>
+              <h4>Pack {player.pack.number} ({player.pack.set_code})</h4>
               <DeckCardList deckCards={player.pack_cards} />
             </div>
             <div className="col-sm-2">

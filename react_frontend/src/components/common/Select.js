@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const Select = ({name, label, onChange, options}) => {
+const Select = ({name, label, value, onChange, options}) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
@@ -8,9 +8,10 @@ const Select = ({name, label, onChange, options}) => {
         <select
           name={name}
           className="form-control"
-          onChange={onChange}>
-          {this.props.options.map(option =>
-            <option key={option.value} value={option.value} selected={option.selected}>{option.display}</option>
+          onChange={onChange}
+          value={value}>
+          {options.map(option =>
+            <option key={option.value} value={option.value}>{option.display}</option>
           )}
         </select>
       </div>
@@ -21,6 +22,7 @@ const Select = ({name, label, onChange, options}) => {
 Select.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired
 };

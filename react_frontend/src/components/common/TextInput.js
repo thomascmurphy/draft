@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const TextInput = ({name, label, onChange, placeholder, value}) => {
+const TextInput = ({name, label, onChange, placeholder, value, customField, customValue}) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
@@ -11,7 +11,8 @@ const TextInput = ({name, label, onChange, placeholder, value}) => {
           className="form-control"
           placeholder={placeholder}
           value={value}
-          onChange={onChange}/>
+          onChange={onChange}
+          data-custom={customValue}/>
       </div>
     </div>
   );
@@ -22,7 +23,8 @@ TextInput.propTypes = {
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.string,
+  customValue: PropTypes.string
 };
 
 export default TextInput;

@@ -17,7 +17,8 @@ class PodPage extends React.Component {
       packs: [],
       decks: [],
       packCards: [],
-      pickNumber: 1
+      pickNumber: 1,
+      pickCount: 45
     };
     this.changePickNumber = this.changePickNumber.bind(this);
   }
@@ -58,14 +59,12 @@ class PodPage extends React.Component {
     return (
       <div>
         <div className="row">
-          <div className="col-md-5">
-            <h1>{this.state.pod.name}</h1>({this.state.pickNumber})
+          <div className="col-md-6">
+            <h1>Pod: {this.state.pod.name} <small>({this.state.pod.pack_1_set}, {this.state.pod.pack_2_set}, {this.state.pod.pack_3_set})</small></h1>
           </div>
-          <div className="col-md-2">
-            pack sets: {this.state.pod.pack_1_set}, {this.state.pod.pack_2_set}, {this.state.pod.pack_3_set}
-          </div>
-          <div className="col-md-5">
-            <input type="range" name="pickNumber" onChange={this.changePickNumber} defaultValue={this.state.pickNumber} min="1" max="45" step="1"/>
+          <div className="col-md-6">
+            <h2 className="text-center">Pick #{this.state.pickNumber}</h2>
+            <input type="range" name="pickNumber" onChange={this.changePickNumber} defaultValue={this.state.pickNumber} min="1" max={this.state.pickCount} step="1"/>
           </div>
         </div>
         <div className="row">
@@ -112,7 +111,7 @@ function collectPodPlayers(state, props, pickNumber) {
       player['pack'] = playerPack;
       player['deck'] = playerDeck;
       player['pack_cards'] = playerPackCards;
-      player['deck_cards'] = playerDeckCards;
+      player['deck_cards'] = playerDeckCards.sort((card1, card2) => card1.pick_number - card2.pick_number);
       return player;
     }
   });

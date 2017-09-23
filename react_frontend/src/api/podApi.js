@@ -16,15 +16,15 @@ class PodApi {
   }
 
   static createPod(pod) {
-    var formData = new FormData();
-    formData.append('pack_card_id', packCardId);
+    var player_emails = pod.players.map(player => player.email);
     const request = new Request(`${process.env.API_HOST}/api/v1/pods`, {
       method: 'POST',
       headers: new Headers({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }),
-      body: JSON.stringify({pod: pod})
+      body: JSON.stringify({pod: pod, player_emails: player_emails}),
+      mode: 'cors'
     });
 
     return fetch(request).then(response => {
@@ -33,7 +33,6 @@ class PodApi {
       return error;
     });
   }
-}
 
   static updatePod(pod) {
     const request = new Request(`${process.env.API_HOST}/api/v1/pods/${pod.id}`, {
@@ -50,14 +49,19 @@ class PodApi {
       return error;
     });
   }
+
+  static getAllSets() {
+    return fetch(`${process.env.API_HOST}/api/v1/sets`).then(response => {
+      return response.json();
+    }).catch(error => {
+      return error;
+    });
+  }
+
+
+
 }
 
-static getAllSets() {
-  return fetch(`${process.env.API_HOST}/api/v1/sets`).then(response => {
-    return response.json();
-  }).catch(error => {
-    return error;
-  });
-}
+
 
 export default PodApi;

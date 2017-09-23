@@ -10,6 +10,11 @@ export default function podReducer(state = initialState.pods, action) {
         ...state.filter(pod => pod.id !== action.pod.id),
         Object.assign({}, action.pod)
       ];
+    case types.CREATE_POD_SUCCESS:
+      return [
+        ...state.filter(pod => pod.id !== action.pod.id),
+        Object.assign({}, action.pod)
+      ];
     default:
       return state;
   }

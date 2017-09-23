@@ -12,7 +12,7 @@ class EmailForm extends React.Component {
         <form>
           <TextInput
             name="email"
-            label="email"
+            label="Your Email"
             value={this.props.email}
             onChange={this.props.onChange}/>
 
