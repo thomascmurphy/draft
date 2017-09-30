@@ -6,7 +6,7 @@ class Pod():
     #methods
     @staticmethod
     def get_pods(params):
-        pods = select_items('pods', params, associations=[{'table': 'players', 'model': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id'}])
+        pods = select_items('pods', params, associations=[{'table': 'players', 'model': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
         return pods
 
     @staticmethod
