@@ -11,7 +11,7 @@ class Pod():
 
     @staticmethod
     def get_pod_by_id(id):
-        pod = select_item_by_id('pods', id, [{'table': 'players', 'model': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id'}])
+        pod = select_item_by_id('pods', id, associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
         return pod
 
     @staticmethod
