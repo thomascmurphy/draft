@@ -40,9 +40,10 @@ def create_pod():
     pack_2_set = pod_json['pack_2_set']
     pack_3_set = pod_json['pack_3_set']
 #     player_emails = ast.literal_eval(request.json['player_emails'])
-    player_emails = filter(None, request.json['player_emails'])
-    pod = Pod.create_pod(name, pack_1_set, pack_2_set, pack_3_set, player_emails)
-    return jsonify({'pod': pod}), 201
+    #players = filter(None, request.json['players'])
+    players = [player for player in request.json['players'] if player['email'] != '']
+    pod = Pod.create_pod(name, pack_1_set, pack_2_set, pack_3_set, players)
+    return jsonify({'pod': pod, 'owner_email': players[0]['email']}), 201
 
 @pods.route('/<int:pod_id>', methods=['DELETE'])
 def delete_pod(pod_id):

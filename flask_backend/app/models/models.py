@@ -30,8 +30,8 @@ def select_items(model, params=[], order=[], select=[], associations=[], group_b
       select = ["%s.*" % model]
 
     if associations!=[]:
-      id_fields = ["'[' || group_concat(%s_join.id) || ']' AS %s_ids" % (association['table'], association['model']) for association in associations]
-      joins = ["INNER JOIN %s %s_join ON (%s.%s = %s_join.%s %s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right'], association['join_filter']) for association in associations]
+      id_fields = ["'[' || group_concat(%s.id) || ']' AS %s_ids" % (association['join_name'], association['join_name']) for association in associations]
+      joins = ["LEFT JOIN %s %s ON (%s.%s = %s.%s %s)" % (association['table'], association['join_name'], model, association['join_field_left'], association['join_name'], association['join_field_right'], association['join_filter']) for association in associations]
       select += id_fields
       join_query = " " + " ".join(joins)
     else:
