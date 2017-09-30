@@ -21,7 +21,7 @@ def insert_item(model, data):
     con.commit()
   return result
 
-def select_items(model, params=[], order=[], select=[], associations=[]):
+def select_items(model, params=[], order=[], select=[], associations=[], group_by=''):
   with sql.connect(current_app.config['DATABASE']) as con:
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -31,7 +31,7 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 
     if associations!=[]:
       id_fields = ["'[' || group_concat(%s_join.id) || ']' AS %s_ids" % (association['table'], association['model']) for association in associations]
-      joins = ["INNER JOIN %s %s_join ON (%s.%s = %s_join.%s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right']) for association in associations]
+      joins = ["INNER JOIN %s %s_join ON (%s.%s = %s_join.%s %s)" % (association['table'], association['table'], model, association['join_field_left'], association['table'], association['join_field_right'], association['join_filter']) for association in associations]
       select += id_fields
       join_query = " " + " ".join(joins)
     else:
@@ -43,6 +43,8 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 
     if params!=[]:
       query += " WHERE " + ' AND '.join(params)
+    if group_by != '':
+      query += " GROUP BY %s " % group_by
     if order != []:
       query += " ORDER BY " + ', '.join(order)
     print(query, file=sys.stderr)
@@ -59,8 +61,8 @@ def select_items(model, params=[], order=[], select=[], associations=[]):
 def select_item_by_id(model, id, associations=[]):
   return select_first_item(model, ["%s.id = %i" % (model, id)], associations=associations)
 
-def select_first_item(model, params=[], order=[], select=[], associations=[]):
-    items = select_items(model, params, order, select, associations)
+def select_first_item(model, params=[], order=[], select=[], associations=[], group_by=''):
+    items = select_items(model, params, order, select, associations, group_by)
     if items:
       item = items[0]
     else:

@@ -41,7 +41,7 @@ class Player():
 
     @staticmethod
     def get_player_pack(player_id):
-        packs = select_items('packs', ["player_id = %i" % player_id, "complete = 0", "open = 1", "pack_cards_join.deck_id IS NULL"], ['number ASC'], associations=[{'table': 'pack_cards', 'model': 'pack_card', 'join_field_left': 'id', 'join_field_right': 'pack_id'}])
+        packs = select_items('packs', ["player_id = %i" % player_id, "complete = 0", "open = 1"], ['number ASC'], associations=[{'table': 'pack_cards', 'model': 'pack_card', 'join_field_left': 'id', 'join_field_right': 'pack_id', 'join_filter': 'AND pack_cards_join.deck_id IS NULL'}], group_by='packs.id')
         if packs:
           pack = sorted(packs, key=lambda pack: len(pack['pack_card_ids']), reverse=True)[0]
         else:
