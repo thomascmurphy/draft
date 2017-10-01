@@ -43,7 +43,7 @@ class Player():
     def get_player_pack(player_id):
         packs = select_items('packs', ["player_id = %i" % player_id, "complete = 0", "open = 1"], ['number ASC'], associations=[{'table': 'pack_cards', 'join_name': 'pack_card', 'model': 'pack_card', 'join_field_left': 'id', 'join_field_right': 'pack_id', 'join_filter': 'AND pack_card.deck_id IS NULL'}], group_by='packs.id')
         if packs:
-          pack = sorted(packs, key=lambda pack: len(pack['pack_card_ids']), reverse=True)[0]
+          pack = sorted(packs, key=lambda pack: (pack['number'], -len(pack['pack_card_ids'])))[0]
         else:
           pack = None
         return pack
