@@ -47,7 +47,7 @@ def select_items(model, params=[], order=[], select=[], associations=[], group_b
       query += " GROUP BY %s " % group_by
     if order != []:
       query += " ORDER BY " + ', '.join(order)
-    print(query, file=sys.stderr)
+    #print(query, file=sys.stderr)
     result = cur.execute(query).fetchall()
     columns = [column[0] for column in cur.description]
     pretty_results = []
@@ -77,7 +77,9 @@ def update_item(model, values, params=[]):
     if params==[]:
       query = ""
     else:
-      query = ' & '.join(params)
+      query = ' AND '.join(params)
+
+    #print("UPDATE %s SET %s WHERE %s" % (model, updates, query), file=sys.stderr)
     result = cur.execute("UPDATE %s SET %s WHERE %s" % (model, updates, query))
     con.commit()
   return result
