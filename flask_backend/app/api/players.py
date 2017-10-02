@@ -51,7 +51,7 @@ def get_player_deck_by_hash(player_hash):
 def get_player_pack_by_hash(player_hash):
     player = Player.get_player_by_hash(player_hash)
     pack = Player.get_player_pack(player['id'])
-    pack_cards = Pack.get_available_cards(pack['id']) if pack else []
+    pack_cards = Pack.get_all_cards(pack['id']) if pack else []
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards}), 201
 
 # @players.route('/<int:player_id>/pack', methods=['GET'])
@@ -77,7 +77,7 @@ def create_pick():
     pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player['id'], next_player_id, pick_number)
 
     pack = Player.get_player_pack(player['id'])
-    pack_cards = Pack.get_available_cards(pack['id']) if pack else []
+    pack_cards = Pack.get_all_cards(pack['id']) if pack else []
     deck_cards = Deck.get_cards(deck['id']) if deck else []
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'deck_cards': deck_cards}), 201
 

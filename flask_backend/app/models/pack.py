@@ -60,7 +60,7 @@ class Pack():
     def get_all_cards(pack_id):
         pack = select_item_by_id('packs', pack_id)
         pack_cards = select_items('pack_cards', ["pack_id=%i" % pack_id])
-        return pack_cards
+        return PackCard.add_card_images_to_pack_cards(pack_cards)
 
     @staticmethod
     def get_pick_number(pack_cards=[]):
