@@ -19,7 +19,7 @@ def get_players():
     email = request.args.get('email')
     query = []
     if email:
-      query = ["email = '%s'" % email]
+      query = ["email = '%s'" % email.lower()]
     players = Player.get_players(query)
     pod_hashes = {player['pod_id']: player['hash'] for player in players}
     pod_ids = set([player['pod_id'] for player in players])
