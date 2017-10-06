@@ -52,6 +52,14 @@ class PackCard():
         return pack_cards
 
     @staticmethod
+    def add_card_data_to_pack_cards(pack_cards):
+        card_ids = [pack_card['card_id'] for pack_card in pack_cards]
+        cards = select_items('cards', ["cards.id in (%s)" % ",".join(list(map(str, card_ids)))])
+        card_data = {card['id']: {'image_url': card['image_url'], 'cmc': card['cmc'], 'colors': card['colors']} for card in cards}
+        pack_cards = [card_data[pack_card['card_id']], **pack_card) for pack_card in pack_cards]
+        return pack_cards
+
+    @staticmethod
     def delete_pack_card(id):
         pack_card = delete_item_with_id('pack_cards', "id='%i'" % id)
         return true
