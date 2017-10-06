@@ -52,7 +52,8 @@ def get_player_pack_by_hash(player_hash):
     player = Player.get_player_by_hash(player_hash)
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []
-    return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards}), 201
+    pod = Pod.get_pod_by_id(player['pod_id'])
+    return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'pod': pod}), 201
 
 # @players.route('/<int:player_id>/pack', methods=['GET'])
 # def get_player_pack_by_id(player_id):
@@ -80,7 +81,8 @@ def create_pick():
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []
     deck_cards = Deck.get_cards(deck['id']) if deck else []
-    return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'deck_cards': deck_cards}), 201
+    pod = Pod.get_pod_by_id(player['pod_id'])
+    return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'deck_cards': deck_cards, 'pod': pod}), 201
 
 @players.route('/<player_hash>/card_images', methods=['GET'])
 def get_player_card_images_by_hash(player_hash):
@@ -94,4 +96,3 @@ def get_player_card_images_by_hash(player_hash):
     pod_pack_cards_with_images = PackCard.add_card_images_to_pack_cards(pod_pack_cards)
     card_image_urls = [card['image_url'] for card in pod_pack_cards_with_images]
     return jsonify({'card_image_urls': card_image_urls}), 201
-
