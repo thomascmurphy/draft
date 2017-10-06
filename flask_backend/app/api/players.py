@@ -84,6 +84,16 @@ def create_pick():
     pod = Pod.get_pod_by_id(player['pod_id'])
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'deck_cards': deck_cards, 'pod': pod}), 201
 
+@players.route('/update_deck_card', methods=['PUT'])
+def update_deck_card():
+    deck_card_json = request.json['deck_card']
+    id = deck_card_json['id']
+    deck_id = deck_card_json['deck_id']
+    sideboard = deck_card_json['sideboard']
+    if deck_id > 0 and sideboard > -1:
+        deck_card = PackCard.update_pack_card_by_id(id, ["sideboard=%i" % sideboard])
+    return jsonify({'deck_card': deck_card}), 201
+
 @players.route('/<player_hash>/card_images', methods=['GET'])
 def get_player_card_images_by_hash(player_hash):
     player = Player.get_player_by_hash(player_hash)
