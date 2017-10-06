@@ -15,7 +15,8 @@ create table pods (
   name text,
   pack_1_set text,
   pack_2_set text,
-  pack_3_set text
+  pack_3_set text,
+  complete boolean default 0
 );
 
 drop table if exists players;

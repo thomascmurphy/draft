@@ -25,6 +25,18 @@ class Pod():
         return pod
 
     @staticmethod
+    def update_pods(values, params):
+        pod_update = update_item('pods', values, params)
+        pod = select_first_item('pods', params)
+        return pod
+
+    @staticmethod
+    def update_pod_by_id(id, values):
+        return Pod.update_pods(values, ["pods.id=%i" % id])
+
+    @staticmethod
     def delete_pod(id):
         pod = delete_item_with_id('pods', "id='%i'" % id)
         return true
+
+

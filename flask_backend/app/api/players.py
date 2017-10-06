@@ -64,9 +64,10 @@ def get_player_pack_by_hash(player_hash):
 @players.route('/pick', methods=['POST'])
 def create_pick():
     pack_card_id = int(request.json['pack_card_id'])
+    player_id = int(request.json['player_id'])
     pack_card = PackCard.get_pack_card_by_id(pack_card_id)
     pack = Pack.get_pack_by_id(pack_card['pack_id'])
-    player = Player.get_player_by_id(pack['player_id'])
+    player = Player.get_player_by_id(player_id)
     pod = Pod.get_pod_by_id(player['pod_id'])
     player_ids = pod['player_ids']
     next_player_id = player_ids[(player_ids.index(player['id']) + 1)%len(player_ids)]
@@ -74,7 +75,7 @@ def create_pick():
     #pick_number = Pack.get_pick_number(Pack.get_all_cards(pack['id']))
     deck_cards = Deck.get_cards(deck['id'])
     pick_number = len(deck_cards) + 1
-    pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player['id'], next_player_id, pick_number)
+    pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player_id, next_player_id, pick_number, pack['player_id'], pod['id'])
 
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []
