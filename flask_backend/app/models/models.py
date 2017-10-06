@@ -54,7 +54,7 @@ def select_items(model, params=[], order=[], select=[], associations=[], group_b
     for row in result:
       if set(dict(row).values()) != {None}:
         #pretty_results.append(dict(zip(columns, row)))
-        dict_row = {k: json.loads(v) if (isinstance(v, str) and v[0] == '[') else v for k, v in dict(row).items()}
+        dict_row = {k: json.loads(v) if (isinstance(v, str) and len(v) > 0 and v[0] == '[') else v for k, v in dict(row).items()}
         pretty_results.append(dict_row)
   return pretty_results
 
