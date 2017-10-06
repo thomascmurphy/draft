@@ -92,7 +92,7 @@ def update_deck_card():
     sideboard = deck_card_json['sideboard']
     if deck_id > 0 and sideboard > -1:
         deck_card = PackCard.update_pack_card_by_id(id, ["sideboard=%i" % sideboard])
-        deck_card_with_image = PackCard.add_card_images_to_pack_cards([deck_card])
+        deck_card_with_image = PackCard.add_card_images_to_pack_cards([deck_card])[0]
     return jsonify({'deck_card': deck_card_with_image}), 201
 
 @players.route('/<player_hash>/card_images', methods=['GET'])
