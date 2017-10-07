@@ -23,14 +23,12 @@ class Pack():
         existing_cards_multiverse_ids = select_items('cards', select=["id"])
         for booster_card in booster_cards:
             while booster_card.multiverse_id in card_ids_used:
-                print('Inserting: %i into: %s' % (booster_card.multiverse_id, ','.join(str(e) for e in card_ids_used)), file=sys.stderr)
                 replacement_cards = SDKCard.where(set=set_code).where(rarity=booster_card.rarity).all()
                 booster_card = random.choice(replacement_cards)
-                print('Card SDK Call', file=sys.stderr)
             if booster_card.multiverse_id in existing_cards_multiverse_ids:
                 card = existing_cards[0]
             else:
-                card = Card.create_card(booster_card.name, booster_card.image_url, booster_card.multiverse_id, booster_card.cmc, json.dumps(booster_card.colors), booster_card.set)
+                card = Card.create_card(booster_card.name, booster_card.image_url, booster_card.multiverse_id, booster_card.cmc, json.dumps(booster_card.colors), booster_card.set, json.dumps(booster_card.mana_cost))
                 existing_cards_multiverse_ids.append(booster_card.multiverse_id)
             card_ids_used.append(booster_card.multiverse_id)
             PackCard.create_pack_card(card['id'], pack['id'])

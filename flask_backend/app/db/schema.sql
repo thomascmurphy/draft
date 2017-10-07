@@ -6,6 +6,7 @@ create table cards (
   multiverse_id integer not null,
   cmc integer not null,
   color_identity text,
+  mana_cost text,
   set_code text
 );
 
