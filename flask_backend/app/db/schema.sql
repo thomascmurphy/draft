@@ -18,7 +18,7 @@ create table cards (
   set_code text,
   types text,
   rarity text,
-  'number' text
+  'number' integer
 );
 
 drop table if exists pods;

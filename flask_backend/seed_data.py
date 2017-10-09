@@ -13,9 +13,9 @@ def seed_cards(set_code, card_data):
     for card in card_data:
         existing_cards = Card.get_cards(["multiverse_id=%s" % card['multiverseid']])
         if not existing_cards:
-            new_card = Card.create_card(card['name'], card['multiverseid'], card['cmc'], json.dumps(card['colorIdentity']), set_code, card['manaCost'], json.dumps(card['types']), card['rarity'].lower(), card['number'])
+            new_card = Card.create_card(card['name'], card['multiverseid'], card['cmc'], json.dumps(card['colorIdentity']), set_code, card['manaCost'], json.dumps(card['types']), card['rarity'].lower(), int(card['number']))
         if not existing_cards[0]['types'] or not existing_cards[0]['rarity'] or not existing_cards[0]['number']:
-            update_card = update_item('cards', ["types=%s" % existing_cards[0]['types'], "rarity=%s" % existing_cards[0]['rarity'].lower(), "number=%s" % existing_cards[0]['number']], params=["id=%i" % existing_cards[0]['id']])
+            update_card = update_item('cards', ["types=%s" % card['types'], "rarity=%s" % card['rarity'].lower(), "number=%i" % int(card['number']]), params=["id=%i" % existing_cards[0]['id']])
 
 with open('AllSets.json') as sets_file:
     set_data = json.load(sets_file)

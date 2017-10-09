@@ -48,6 +48,6 @@ class Set():
         cards = []
         for rarity in booster:
             card_ids_used = [card['id'] for card in cards]
-            card = Card.get_random_card(["cards.set_code=%s" % set_code, "cards.rarity=%s" % rarity, "cards.id not in (%s)" % ",".join(list(map(str, card_ids_used)))])
+            card = Card.get_random_card(["cards.set_code=%s" % set_code, "cards.rarity=%s" % rarity, "cards.number <= %i" % set['card_count'], "cards.id not in (%s)" % ",".join(list(map(str, card_ids_used)))])
             cards.append(card)
         return cards
