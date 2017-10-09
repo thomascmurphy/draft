@@ -1,13 +1,24 @@
+drop table if exists sets;
+create table sets (
+  id integer primary key autoincrement,
+  name text not null,
+  code text not null,
+  release_date text not null,
+  card_count integer
+);
+
 drop table if exists cards;
 create table cards (
   id integer primary key autoincrement,
   name text not null,
-  image_url text not null,
   multiverse_id integer not null,
   cmc integer not null,
   color_identity text,
   mana_cost text,
-  set_code text
+  set_code text,
+  types text,
+  rarity text,
+  'number' text
 );
 
 drop table if exists pods;

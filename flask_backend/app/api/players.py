@@ -104,6 +104,6 @@ def get_player_card_images_by_hash(player_hash):
     pod_packs = Pack.get_packs(['packs.player_id IN (%s)' % ",".join(list(map(str, pod_player_ids)))])
     pod_pack_ids = [pack['id'] for pack in pod_packs]
     pod_pack_cards = PackCard.get_pack_cards(['pack_cards.pack_id IN (%s)' % ",".join(list(map(str, pod_pack_ids)))])
-    pod_pack_cards_with_images = PackCard.add_card_images_to_pack_cards(pod_pack_cards)
+    pod_pack_cards_with_images = PackCard.add_card_data_to_pack_cards(pod_pack_cards)
     card_image_urls = [card['image_url'] for card in pod_pack_cards_with_images]
     return jsonify({'card_image_urls': card_image_urls}), 201

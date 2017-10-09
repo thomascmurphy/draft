@@ -1,3 +1,4 @@
+from.set import Set
 from .card import Card
 from .deck import Deck
 from .pack_card import PackCard

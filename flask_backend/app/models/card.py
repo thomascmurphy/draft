@@ -13,8 +13,13 @@ class Card():
         return card
 
     @staticmethod
-    def create_card(name, image_url, multiverse_id, cmc, color_identity, set_code, mana_cost):
-        card = insert_item('cards', {'name': name, 'image_url': image_url, 'multiverse_id': multiverse_id, 'cmc': cmc, 'color_identity': color_identity, 'set_code': set_code, 'mana_cost': mana_cost})
+    def get_random_card(params):
+        card = select_first_item('cards', params, ["RANDOM()"])
+        return card
+
+    @staticmethod
+    def create_card(name, multiverse_id, cmc, color_identity, set_code, mana_cost, types, rarity, number):
+        card = insert_item('cards', {'name': name, 'multiverse_id': multiverse_id, 'cmc': cmc, 'color_identity': color_identity, 'set_code': set_code, 'mana_cost': mana_cost, 'types': types, 'rarity': rarity, 'number': number})
         return card
 
     @staticmethod

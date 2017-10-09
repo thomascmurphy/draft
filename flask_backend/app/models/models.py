@@ -21,7 +21,7 @@ def insert_item(model, data):
     con.commit()
   return result
 
-def select_items(model, params=[], order=[], select=[], associations=[], group_by=''):
+def select_items(model, params=[], order=[], select=[], associations=[], group_by='', limit=''):
   with sql.connect(current_app.config['DATABASE']) as con:
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -47,6 +47,8 @@ def select_items(model, params=[], order=[], select=[], associations=[], group_b
       query += " GROUP BY %s " % group_by
     if order != []:
       query += " ORDER BY " + ', '.join(order)
+    if limit != '':
+      query += " LIMIT %i" % limit
     #print(query, file=sys.stderr)
     result = cur.execute(query).fetchall()
     columns = [column[0] for column in cur.description]
@@ -62,7 +64,7 @@ def select_item_by_id(model, id, associations=[]):
   return select_first_item(model, ["%s.id = %i" % (model, id)], associations=associations)
 
 def select_first_item(model, params=[], order=[], select=[], associations=[], group_by=''):
-    items = select_items(model, params, order, select, associations, group_by)
+    items = select_items(model, params, order, select, associations, group_by, 1)
     if items:
       item = items[0]
     else:
