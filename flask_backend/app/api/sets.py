@@ -27,10 +27,10 @@ def get_sets():
 #   sets = Set.seed_data()
 #   return jsonify({'sets': sets}), 201
 #
-# @sets.route('/<set_code>/booster', methods=['GET'])
-# def booster(set_code):
-#   cards = Set.generate_booster(set_code)
-#   return jsonify({'cards': cards}), 201
+@sets.route('/<set_code>/booster', methods=['GET'])
+def booster(set_code):
+  cards = Set.generate_booster(set_code)
+  return jsonify({'cards': cards}), 201
 #
 # @sets.route('/transfer_pack_cards')
 # def transfer_pack_cards():

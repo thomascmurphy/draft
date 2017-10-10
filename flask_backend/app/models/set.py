@@ -35,7 +35,7 @@ class Set():
             if isinstance(rarity, list):
                 if rarity[0] == "rare" and rarity[1] == "mythic rare":
                     rarity = ["rare", "rare", "rare", "rare", "rare", "rare", "rare", "mythic rare"]
-                rarity = random.choice(rarity)
+                rarity = re.sub("foil\s", "", random.choice(rarity))
             elif rarity == "land":
                 rarity = "basic land"
             if rarity != "marketing":
