@@ -8,5 +8,7 @@ flask/
 # Ignore the SQLite database.
 /flask_backend/app/db/*.db
 
+/flask_backend/AllSets.json
+
 # Mac OS X custom attribute files
 .DS_Store

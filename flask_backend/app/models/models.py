@@ -7,6 +7,7 @@ import sys
 import ast
 import random
 import json
+import re
 
 def insert_item(model, data):
   with sql.connect(current_app.config['DATABASE']) as con:

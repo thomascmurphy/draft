@@ -3,6 +3,7 @@ create table sets (
   id integer primary key autoincrement,
   name text not null,
   code text not null,
+  booster text not null,
   release_date text not null,
   card_count integer
 );
@@ -13,7 +14,7 @@ create table cards (
   name text not null,
   multiverse_id integer not null,
   cmc integer not null,
-  color_identity text,
+  colors text,
   mana_cost text,
   set_code text,
   types text,
@@ -28,6 +29,7 @@ create table pods (
   pack_1_set text,
   pack_2_set text,
   pack_3_set text,
+  owner_id integer
   complete boolean default 0
 );
 
