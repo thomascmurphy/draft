@@ -26,3 +26,18 @@ class Card():
     def delete_card(id):
         card = delete_item_with_id('cards', "id='%i'" % id)
         return true
+
+    def calculate_rating(self, deck_cards_color_count, deck_cards_cmc_count):
+        base_rating = self['rating']
+        cmc = self['cmc']
+        cmc_size = deck_cards_cmc_count[str(cmc)]) if str(cmc) in deck_cards_cmc_count else 0
+        symbols = re.findall(r'\{.+\}', self['cost'])
+        colors = json.loads['colors']
+        deck_card_count = sum(deck_cards_cmc_count.values())
+        cast_rating = 10 / (len(colors) + len(symbols) + cmc + 1)
+        color_rating = 0
+        for color in colors:
+            color_rating += (40 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
+        color_rating = color_rating / len(colors) if colors else 5
+        curve_rating = ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
+        return {'full_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}

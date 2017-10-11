@@ -52,6 +52,14 @@ class PackCard():
         return pack_cards
 
     @staticmethod
+    def add_ratings(pack_cards, deck_cards_color_count, deck_cards_cmc_count):
+        card_ids = [pack_card['card_id'] for pack_card in pack_cards]
+        cards = select_items('cards', ["cards.id in (%s)" % ",".join(list(map(str, card_ids)))])
+        ratings = {card['id']: card.calculate_rating(deck_cards_color_count, deck_cards_cmc_count) for card in cards}
+        pack_cards = [dict(ratings[pack_card['card_id']], **pack_card) for pack_card in pack_cards]
+        return pack_cards
+
+    @staticmethod
     def delete_pack_card(id):
         pack_card = delete_item_with_id('pack_cards', "id='%i'" % id)
         return true

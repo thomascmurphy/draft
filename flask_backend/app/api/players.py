@@ -55,6 +55,18 @@ def get_player_pack_by_hash(player_hash):
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []
     pod = Pod.get_pod_by_id(player['pod_id'])
+    deck = Player.get_player_deck(player['id'])
+    deck_cards = Deck.get_cards(deck['id'])
+    deck_cards_color_count = {white: 0, blue: 0, black: 0, red: 0, green: 0}
+    deck_cards_cmc_count = defaultdict(list)
+    for deckCard in deckCards:
+        deck_cards_color_count['white'] += len(re.findall(r'W', deckCard['mana_cost']))
+        deck_cards_color_count['blue'] += len(re.findall(r'U', deckCard['mana_cost']))
+        deck_cards_color_count['black'] += len(re.findall(r'B', deckCard['mana_cost']))
+        deck_cards_color_count['red'] += len(re.findall(r'R', deckCard['mana_cost']))
+        deck_cards_color_count['green'] += len(re.findall(r'G', deckCard['mana_cost']))
+        deck_cards_cmc_count[str(deckCard['cmc'])] += 1
+    pack_cards = PackCard.add_ratings(pack_cards, deck_cards_color_count, deck_cards_cmc_count)
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'pod': pod}), 201
 
 # @players.route('/<int:player_id>/pack', methods=['GET'])
