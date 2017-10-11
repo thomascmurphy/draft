@@ -51,12 +51,18 @@ def get_player_deck_by_hash(player_hash):
 
 @players.route('/<player_hash>/pack', methods=['GET'])
 def get_player_pack_by_hash(player_hash):
-    player = Player.get_player_by_hash(player_hash)
-    pack = Player.get_player_pack(player['id'])
-    pack_cards = Pack.get_all_cards(pack['id']) if pack else []
-    pod = Pod.get_pod_by_id(player['pod_id'])
-    deck = Player.get_player_deck(player['id'])
-    deck_stats = deck.get_stats()
+    if player_hash == 'test1':
+        card_ids = []
+        cards = Card.get_cards(["id in (%s)" %  ",".join(list(map(str, card_ids)))])
+        deck_stats = {'deck_cards_color_count': {'white': , 'blue': , 'black': , 'red': , 'green': }, 'deck_cards_cmc_count': {'1': 2, '2': 2, '3': 4, '4': 5, '5': 2}, 'deck_cards_count': 15}
+        pack_cards = [dict({'deck_id': None, 'pack_id': 0, 'pick_id': None, 'image_url': "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%i&type=card" % card['multiverse_id']}, **card) for card in cards]
+    else:
+        player = Player.get_player_by_hash(player_hash)
+        pack = Player.get_player_pack(player['id'])
+        pack_cards = Pack.get_all_cards(pack['id']) if pack else []
+        pod = Pod.get_pod_by_id(player['pod_id'])
+        deck = Player.get_player_deck(player['id'])
+        deck_stats = deck.get_stats()
     pack_cards = PackCard.add_ratings(pack_cards, deck_stats['deck_cards_color_count'], deck_stats['deck_cards_cmc_count'])
     return jsonify({'player': player, 'pack': pack, 'pack_cards': pack_cards, 'pod': pod}), 201
 
