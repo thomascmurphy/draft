@@ -39,7 +39,8 @@ create table players (
   name text,
   email text not null,
   pod_id integer references pods on delete cascade,
-  hash text
+  hash text,
+  is_bot boolean default 0
 );
 
 drop table if exists packs;

@@ -2,7 +2,9 @@ import base64
 from flask import current_app
 
 from .models import *
+from .pack import Pack
 from .deck import Deck
+from .pack_card import PackCard
 
 class Player():
     #methods
@@ -52,3 +54,16 @@ class Player():
     def get_player_deck(player_id):
         deck = select_first_item('decks', ["player_id=%i" % player_id])
         return deck
+
+    def auto_pick_card(self):
+        pack = Player.get_player_pack(self['id'])
+        deck = Player.get_player_deck(self['id'])
+        pack_cards = Pack.get_available_cards(pack['id'])
+        deck_stats = deck.get_stats()
+        pack_cards = PackCard.add_ratings(pack_cards, deck_stats['deck_cards_color_count'], deck_stats['deck_cards_cmc_count'])
+        pick = sorted(pack_cards, key=lambda pack_cards: pack_cards['overall_rating'])[0]
+        pod = select_item_by_id('pods', self['pod_id'], associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
+        player_ids = pod['player_ids']
+        next_player_id = player_ids[(player_ids.index(self['id']) + 1)%len(player_ids)]
+        pick_number = deck_stats['deck_cards_count'] + 1
+        return PackCard.pick_pack_card(pick['id'], deck['id'], self['id'], next_player_id, pick_number, pack['player_id'], pod['id'])

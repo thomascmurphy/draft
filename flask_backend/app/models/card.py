@@ -40,4 +40,4 @@ class Card():
             color_rating += (40 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
         color_rating = color_rating / len(colors) if colors else 5
         curve_rating = ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
-        return {'full_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
+        return {'overall_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
