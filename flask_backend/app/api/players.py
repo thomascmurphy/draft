@@ -22,9 +22,11 @@ def get_players():
       query = ["email = '%s'" % email.lower()]
     players = Player.get_players(query)
     pod_hashes = {player['pod_id']: player['hash'] for player in players}
+    pod_player_ids = {player['pod_id']: player['id'] for player in players}
     pod_ids = set([player['pod_id'] for player in players])
     pods = Pod.get_pods(["pods.id in (%s)" % ",".join(list(map(str, pod_ids)))])
-    pods = [dict({'player_hash': pod_hashes[pod['id']]}, **pod) for pod in pods]
+    pod_owners = {pod['id']: pod['owner_id'] == pod_ids[pod['id']] for pod in pods}
+    pods = [dict({'player_hash': pod_hashes[pod['id']], 'is_owner': pod_owners[pod['id']]}, **pod) for pod in pods]
     return jsonify({'players': players, 'pods': pods}), 201
 
 @players.route('/<int:player_id>', methods=['GET'])

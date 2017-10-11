@@ -47,7 +47,10 @@ def create_pod():
 
 @pods.route('/<int:pod_id>', methods=['DELETE'])
 def delete_pod(pod_id):
-    pod = Pod.delete_pod(pod_id)
+    player_id = request.args.get('player_id')
+    pod = Pod.get_pod_by_id(pod_id)
+    if pod['owner_id'] == player_id:
+        pod = Pod.delete_pod(pod_id)
     return jsonify(pod), 201
 
 @pods.route('/<int:pod_id>/pack/<int:pack_number>/picks/<int:pick_number>', methods=['GET'])

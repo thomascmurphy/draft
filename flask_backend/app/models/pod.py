@@ -6,12 +6,14 @@ class Pod():
     #methods
     @staticmethod
     def get_pods(params):
-        pods = select_items('pods', params, associations=[{'table': 'players', 'join_name': 'player', 'model': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}], group_by='pods.id', order=['id DESC'])
+        select_fields = ["pods.id", "pods.name", "pods.pack_1_set", "pods.pack_2_set", "pods.pack_3_set", "pods.complete"]
+        pods = select_items('pods', params, select=select_fields, associations=[{'table': 'players', 'join_name': 'player', 'model': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}], group_by='pods.id', order=['id DESC'])
         return pods
 
     @staticmethod
     def get_pod_by_id(id):
-        pod = select_item_by_id('pods', id, associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
+        select_fields = ["pods.id", "pods.name", "pods.pack_1_set", "pods.pack_2_set", "pods.pack_3_set", "pods.complete"]
+        pod = select_item_by_id('pods', id, select=select_fields, associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
         return pod
 
     @staticmethod
@@ -38,5 +40,3 @@ class Pod():
     def delete_pod(id):
         pod = delete_item_with_id('pods', "id='%i'" % id)
         return true
-
-
