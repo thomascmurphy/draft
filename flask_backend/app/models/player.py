@@ -28,11 +28,11 @@ class Player():
         return player
 
     @staticmethod
-    def create_player(email, name, pod_id):
+    def create_player(email, name, is_bot, pod_id):
         hash_components = "%i%s" % (pod_id, email)
         player_hash = base64.b64encode(hash_components.encode())
         player_hash_string = player_hash.decode('utf-8')
-        player = insert_item('players', {'email': email, 'name': name, 'pod_id': pod_id, 'hash': player_hash_string})
+        player = insert_item('players', {'email': email, 'name': name, 'is_bot': is_bot, 'pod_id': pod_id, 'hash': player_hash_string})
         deck = Deck.create_deck(player['id'])
         return player
 
@@ -55,15 +55,16 @@ class Player():
         deck = select_first_item('decks', ["player_id=%i" % player_id])
         return deck
 
-    def auto_pick_card(self):
-        pack = Player.get_player_pack(self['id'])
-        deck = Player.get_player_deck(self['id'])
+    @staticmethod
+    def auto_pick_card(player):
+        pack = Player.get_player_pack(player['id'])
+        deck = Player.get_player_deck(player['id'])
         pack_cards = Pack.get_available_cards(pack['id'])
         deck_stats = deck.get_stats()
         pack_cards = PackCard.add_ratings(pack_cards, deck_stats['deck_cards_color_count'], deck_stats['deck_cards_cmc_count'])
         pick = sorted(pack_cards, key=lambda pack_cards: pack_cards['overall_rating'])[0]
-        pod = select_item_by_id('pods', self['pod_id'], associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
+        pod = select_item_by_id('pods', player['pod_id'], associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
         player_ids = pod['player_ids']
-        next_player_id = player_ids[(player_ids.index(self['id']) + 1)%len(player_ids)]
+        next_player_id = player_ids[(player_ids.index(player['id']) + 1)%len(player_ids)]
         pick_number = deck_stats['deck_cards_count'] + 1
-        return PackCard.pick_pack_card(pick['id'], deck['id'], self['id'], next_player_id, pick_number, pack['player_id'], pod['id'])
+        return PackCard.pick_pack_card(pick['id'], deck['id'], player['id'], next_player_id, pick_number, pack['player_id'], pod['id'])
