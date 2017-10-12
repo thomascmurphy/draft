@@ -55,7 +55,7 @@ class PackCard():
     def add_ratings(pack_cards, deck_cards_color_count, deck_cards_cmc_count):
         card_ids = [pack_card['card_id'] for pack_card in pack_cards]
         cards = select_items('cards', ["cards.id in (%s)" % ",".join(list(map(str, card_ids)))])
-        ratings = {card['id']: card.calculate_rating(deck_cards_color_count, deck_cards_cmc_count) for card in cards}
+        ratings = {card['id']: Card.calculate_rating(card, deck_cards_color_count, deck_cards_cmc_count) for card in cards}
         pack_cards = [dict(ratings[pack_card['card_id']], **pack_card) for pack_card in pack_cards]
         return pack_cards
 

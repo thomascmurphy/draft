@@ -1,3 +1,4 @@
+import collections
 from .models import *
 from .pack_card import PackCard
 
@@ -34,15 +35,17 @@ class Deck():
         deck_cards = select_items('pack_cards', ["deck_id=%i" % deck_id], ["pack_cards.pick_number ASC"])
         return PackCard.add_card_data_to_pack_cards(deck_cards)
 
-    def get_stats(self)
-        deck_cards = Deck.get_cards(self['id'])
-        deck_cards_color_count = {white: 0, blue: 0, black: 0, red: 0, green: 0}
-        deck_cards_cmc_count = defaultdict(list)
-        for deckCard in deckCards:
-            deck_cards_color_count['white'] += len(re.findall(r'W', deckCard['mana_cost']))
-            deck_cards_color_count['blue'] += len(re.findall(r'U', deckCard['mana_cost']))
-            deck_cards_color_count['black'] += len(re.findall(r'B', deckCard['mana_cost']))
-            deck_cards_color_count['red'] += len(re.findall(r'R', deckCard['mana_cost']))
-            deck_cards_color_count['green'] += len(re.findall(r'G', deckCard['mana_cost']))
-            deck_cards_cmc_count[str(deckCard['cmc'])] += 1
+    @staticmethod
+    def get_stats(deck_id, deck_cards=[]):
+        if deck_cards == []:
+          Deck.get_cards(deck_id)
+        deck_cards_color_count = {'white': 0, 'blue': 0, 'black': 0, 'red': 0, 'green': 0}
+        deck_cards_cmc_count = collections.defaultdict(int)
+        for deck_card in deck_cards:
+            deck_cards_color_count['white'] += len(re.findall(r'W', deck_card['mana_cost']))
+            deck_cards_color_count['blue'] += len(re.findall(r'U', deck_card['mana_cost']))
+            deck_cards_color_count['black'] += len(re.findall(r'B', deck_card['mana_cost']))
+            deck_cards_color_count['red'] += len(re.findall(r'R', deck_card['mana_cost']))
+            deck_cards_color_count['green'] += len(re.findall(r'G', deck_card['mana_cost']))
+            deck_cards_cmc_count[str(deck_card['cmc'])] += 1
         return {'deck_cards_color_count': deck_cards_color_count, 'deck_cards_cmc_count': deck_cards_cmc_count, 'deck_cards_count': len(deck_cards)}

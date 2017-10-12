@@ -3,7 +3,6 @@
 """
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-#from mtgsdk import Set
 from ..models import Set, PackCard
 from ..models.models import *
 

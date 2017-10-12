@@ -1,7 +1,6 @@
 from __future__ import print_function # In python 2.7
 import sqlite3 as sql
 from flask import current_app, jsonify
-from mtgsdk import Set as SDKSet, Card as SDKCard
 import pdb
 import sys
 import ast
@@ -90,6 +89,6 @@ def update_item(model, values, params=[]):
 def delete_item_with_id(model, id):
   with sql.connect(current_app.config['DATABASE']) as con:
     cur = con.cursor()
-    if id != null:
-      result = cur.execute("delete from %s where id = %i;" % (model, id))
+    if id != None:
+      result = cur.execute("delete from %s where id = %i" % (model, id))
   return result
