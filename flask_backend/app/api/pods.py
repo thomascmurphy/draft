@@ -52,7 +52,7 @@ def delete_pod(pod_id):
     delete_success = False
     if pod['owner_id'] == player_id:
         delete_success = Pod.delete_pod(pod_id)
-    return jsonify({'success': delete_success), 201
+    return jsonify({'success': delete_success}), 201
 
 @pods.route('/<int:pod_id>/pack/<int:pack_number>/picks/<int:pick_number>', methods=['GET'])
 def view_picks(pod_id, pack_number, pick_number):
