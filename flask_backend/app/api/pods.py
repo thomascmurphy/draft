@@ -41,7 +41,7 @@ def create_pod():
     pack_3_set = pod_json['pack_3_set']
 #     player_emails = ast.literal_eval(request.json['player_emails'])
     #players = filter(None, request.json['players'])
-    players = [player for player in request.json['players'] if player['email'] != '']
+    players = [player for player in request.json['players'] if player['email'] != '' or player['is_bot']]
     pod = Pod.create_pod(name, pack_1_set, pack_2_set, pack_3_set, players)
     return jsonify({'pod': pod, 'owner_email': players[0]['email']}), 201
 
