@@ -17,6 +17,9 @@ players = Blueprint('players', __name__, url_prefix='/api/v1/players')
 test_1_pack_card_ids = [435176, 435197, 435366, 435282, 435299, 435249, 435159, 435341, 435228, 435356, 435178, 435188, 435302, 435330, 435277, 435433]
 test_1_deck_card_ids = [435387, 435274, 435292, 435245, 435163, 435219, 435364, 435350, 435190, 435277, 435193, 435278, 435195, 435281, 435199, 435429]
 
+test_2_pack_card_ids = [435378, 435384, 435353, 435277, 435249]
+test_2_deck_card_ids = []
+
 @players.route('', methods=['GET'])
 def get_players():
     email = request.args.get('email')
@@ -40,13 +43,16 @@ def get_player(player_id):
 
 @players.route('/<player_hash>/deck', methods=['GET'])
 def get_player_deck_by_hash(player_hash):
-    if player_hash == 'test1':
-      player = {'hash': player_hash, 'name': player_hash, 'id': 0, 'pod_id': 0}
-      deck = {}
-      card_multiverse_ids = test_1_deck_card_ids
-      card_multiverse_orders = ["multiverse_id=%i DESC" % multiverse_id for multiverse_id in card_multiverse_ids]
-      cards = Card.get_cards(["multiverse_id in (%s)" % ",".join(list(map(str, card_multiverse_ids)))], card_multiverse_orders)
-      deck_cards = [dict({'deck_id': 0, 'pack_id': 0, 'pick_number': index + 1, 'image_url': "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%i&type=card" % card['multiverse_id'], 'card_id': card['id']}, **card) for index, card in enumerate(cards)]
+    if player_hash in ['test1', 'test2']:
+        if player_hash == 'test1':
+            deck_multiverse_ids = test_1_deck_card_ids
+        elif player_hash == 'test2':
+            deck_multiverse_ids = test_2_deck_card_ids
+        deck_multiverse_orders = ["multiverse_id=%i DESC" % multiverse_id for multiverse_id in deck_multiverse_ids]
+        cards = Card.get_cards(["multiverse_id in (%s)" % ",".join(list(map(str, deck_multiverse_ids)))], deck_multiverse_orders)
+        deck_cards = [dict({'deck_id': 0, 'pack_id': 0, 'pick_number': index + 1, 'image_url': "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%i&type=card" % card['multiverse_id'], 'card_id': card['id']}, **card) for index, card in enumerate(cards)]
+        deck = {}
+        player = {'hash': player_hash, 'name': player_hash, 'id': 0, 'pod_id': 0}
     else:
       player = Player.get_player_by_hash(player_hash)
       deck = Player.get_player_deck(player['id'])
@@ -62,17 +68,21 @@ def get_player_deck_by_hash(player_hash):
 
 @players.route('/<player_hash>/pack', methods=['GET'])
 def get_player_pack_by_hash(player_hash):
-    if player_hash == 'test1':
-        card_multiverse_ids = test_1_pack_card_ids
+    if player_hash in ['test1', 'test2']:
+        if player_hash == 'test1':
+            card_multiverse_ids = test_1_pack_card_ids
+            deck_multiverse_ids = test_1_deck_card_ids
+        elif player_hash == 'test2':
+            card_multiverse_ids = test_2_pack_card_ids
+            deck_multiverse_ids = test_2_deck_card_ids
         card_multiverse_orders = ["multiverse_id=%i DESC" % multiverse_id for multiverse_id in card_multiverse_ids]
-        deck_multiverse_ids = test_1_deck_card_ids
         cards = Card.get_cards(["multiverse_id in (%s)" %  ",".join(list(map(str, card_multiverse_ids)))], card_multiverse_orders)
         cards_deck = Card.get_cards(["multiverse_id in (%s)" %  ",".join(list(map(str, deck_multiverse_ids)))])
         deck_cards = [dict({'deck_id': 0, 'pack_id': 0, 'pick_id': index + 1, 'card_id': card['id']}, **card) for index, card in enumerate(cards_deck)]
         deck_stats = Deck.get_stats(0, deck_cards)
         pack_cards = [dict({'deck_id': None, 'pack_id': 0, 'pick_id': None, 'image_url': "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%i&type=card" % card['multiverse_id'], 'card_id': card['id']}, **card) for card in cards]
         player = {'hash': player_hash, 'name': player_hash, 'id': 0, 'pod_id': 0}
-        pack = {'id': 0, 'player_id': 0, 'number': 2}
+        pack = {'id': 0, 'player_id': 0, 'number': 0}
         pod = {'id': 0, 'name': player_hash}
     else:
         player = Player.get_player_by_hash(player_hash)

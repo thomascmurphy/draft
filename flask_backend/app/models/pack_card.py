@@ -1,8 +1,9 @@
 from .models import *
 from .card import Card
-# from .player import Player
+import player
 
 class PackCard():
+    player_class = player.Player()
     #methods
     @staticmethod
     def get_pack_cards(params):
@@ -36,8 +37,8 @@ class PackCard():
           remaining_cards = select_items('pack_cards', ['pack_id=%i' % pack_card['pack_id'], 'deck_id IS NULL'])
           pack_complete = 0 if len(remaining_cards) > 0 else 1
           update = update_item('packs', ['player_id=%i' % next_player['id'], 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
-#           if next_player['is_bot']:
-#             Player.auto_pick_card(next_player)
+          if next_player['is_bot']:
+            player_class.auto_pick_card(next_player)
           if pack_complete:
             pack = select_item_by_id('packs', pack_card['pack_id'])
             if pack['number'] < 3:
