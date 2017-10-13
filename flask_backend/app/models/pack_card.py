@@ -1,6 +1,6 @@
 from .models import *
 from .card import Card
-import player
+from .player import Player
 
 class PackCard():
     player_class = player.Player()
