@@ -1,5 +1,6 @@
 from .models import *
 from .card import Card
+# from .player import Player
 
 class PackCard():
     #methods
@@ -29,12 +30,14 @@ class PackCard():
         return PackCard.update_pack_card(values, ["pack_cards.id=%i" % id])
 
     @staticmethod
-    def pick_pack_card(pack_card_id, deck_id, player_id, next_player_id, pick_number, pack_player_id, pod_id):
+    def pick_pack_card(pack_card_id, deck_id, player_id, next_player, pick_number, pack_player_id, pod_id):
         if player_id == pack_player_id:
           pack_card = PackCard.update_pack_card_by_id(pack_card_id, ['pick_number=%i' % pick_number, 'deck_id=%i' % deck_id])
           remaining_cards = select_items('pack_cards', ['pack_id=%i' % pack_card['pack_id'], 'deck_id IS NULL'])
           pack_complete = 0 if len(remaining_cards) > 0 else 1
-          update = update_item('packs', ['player_id=%i' % next_player_id, 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
+          update = update_item('packs', ['player_id=%i' % next_player['id'], 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
+#           if next_player['is_bot']:
+#             Player.auto_pick_card(next_player)
           if pack_complete:
             pack = select_item_by_id('packs', pack_card['pack_id'])
             if pack['number'] < 3:

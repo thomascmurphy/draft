@@ -23,12 +23,13 @@ def get_players():
     query = []
     if email:
       query = ["email = '%s'" % email.lower()]
-    players = Player.get_players(query)
-    pod_hashes = {player['pod_id']: {'id': player['id'], 'hash': player['hash']} for player in players}
-    pod_player_ids = {player['pod_id']: player['id'] for player in players}
-    pods = Pod.get_pods(["pods.id in (%s)" % ",".join(list(map(str, pod_player_ids.keys())))])
-    pod_owners = {pod['id']: pod['owner_id'] == pod_player_ids[pod['id']] for pod in pods}
-    pods = [dict({'player_id': pod_hashes[pod['id']]['id'], 'player_hash': pod_hashes[pod['id']]['hash'], 'is_owner': pod_owners[pod['id']]}, **pod) for pod in pods]
+      players = Player.get_players(query)
+      pod_hashes = {player['pod_id']: {'id': player['id'], 'hash': player['hash'], 'is_owner': player['is_owner']} for player in players}
+      pods = Pod.get_pods(["pods.id in (%s)" % ",".join(list(map(str, pod_hashes.keys())))])
+      pods = [dict({'player_id': pod_hashes[pod['id']]['id'], 'player_hash': pod_hashes[pod['id']]['hash'], 'is_owner':pod_hashes[pod['id']]['is_owner']}, **pod) for pod in pods]
+    else:
+      players = []
+      pods = []
     return jsonify({'players': players, 'pods': pods}), 201
 
 @players.route('/<int:player_id>', methods=['GET'])
@@ -100,11 +101,12 @@ def create_pick():
     pod = Pod.get_pod_by_id(player['pod_id'])
     player_ids = pod['player_ids']
     next_player_id = player_ids[(player_ids.index(player['id']) + 1)%len(player_ids)]
+    next_player = Player.get_player_by_id(next_player_id)
     deck = Deck.get_deck_by_player_id(player['id'])
     #pick_number = Pack.get_pick_number(Pack.get_all_cards(pack['id']))
     deck_cards = Deck.get_cards(deck['id'])
     pick_number = len(deck_cards) + 1
-    pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player_id, next_player_id, pick_number, pack['player_id'], pod['id'])
+    pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player_id, next_player, pick_number, pack['player_id'], pod['id'])
 
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []

@@ -48,9 +48,9 @@ def create_pod():
 @pods.route('/<int:pod_id>', methods=['DELETE'])
 def delete_pod(pod_id):
     player_id = int(request.args.get('player_id'))
-    pod = Pod.get_pod_by_id(pod_id)
+    player = Player.get_player_by_id(player_id)
     delete_success = False
-    if pod['owner_id'] == player_id:
+    if player['is_owner'] and player['pod_id']==pod_id:
         delete_success = Pod.delete_pod(pod_id)
     return jsonify({'success': delete_success}), 201
 
