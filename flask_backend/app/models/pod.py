@@ -18,12 +18,16 @@ class Pod():
     def create_pod(name, pack_1_set, pack_2_set, pack_3_set, players):
         pod = insert_item('pods', {'name': name, 'pack_1_set': pack_1_set, 'pack_2_set': pack_2_set, 'pack_3_set': pack_3_set})
         packs_array = [pack_1_set, pack_2_set, pack_3_set]
+        pod_players = []
         for index, player_info in enumerate(players):
-            player = Player.create_player(player_info['email'].lower(), player_info['name'], player_info['is_bot'], index==0, pod['id'])
+            player_name = player_info['name'] if 'name' in player_info else player_info['email'].lower()
+            player = Player.create_player(player_info['email'].lower(), player_name, player_info['is_bot'], index==0, pod['id'])
+            pod_players.append(player)
             for counter,set_code in enumerate(packs_array):
                 pack = Pack.create_pack(set_code, player['id'], counter+1, counter==0)
-            if player['is_bot']:
-                Player.auto_pick_card(player)
+        for pod_player in pod_players:
+          if pod_player['is_bot']:
+            Player.auto_pick_card(pod_player)
         return pod
 
     @staticmethod

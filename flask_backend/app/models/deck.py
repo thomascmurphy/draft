@@ -38,7 +38,7 @@ class Deck():
     @staticmethod
     def get_stats(deck_id, deck_cards=[]):
         if deck_cards == []:
-          Deck.get_cards(deck_id)
+          deck_cards = Deck.get_cards(deck_id)
         deck_cards_color_count = {'white': 0, 'blue': 0, 'black': 0, 'red': 0, 'green': 0}
         deck_cards_cmc_count = collections.defaultdict(int)
         for deck_card in deck_cards:

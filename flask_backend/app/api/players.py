@@ -116,7 +116,7 @@ def create_pick():
     #pick_number = Pack.get_pick_number(Pack.get_all_cards(pack['id']))
     deck_cards = Deck.get_cards(deck['id'])
     pick_number = len(deck_cards) + 1
-    pack_card = PackCard.pick_pack_card(pack_card_id, deck['id'], player_id, next_player, pick_number, pack['player_id'], pod['id'])
+    pack_card = Player.pick_pack_card(pack_card_id, deck['id'], player_id, next_player, pick_number, pack['player_id'], pod['id'])
 
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []

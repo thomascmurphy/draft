@@ -92,3 +92,37 @@ def delete_item_with_id(model, id):
     if id != None:
       result = cur.execute("delete from %s where id = %i" % (model, id))
   return result
+
+
+
+def check_pod_completion(pod_id):
+  pod = select_item_by_id('pods', pod_id, associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
+  player_ids = pod['player_ids']
+  unfinished_packs = select_items('packs', ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), "complete=0"])
+  if len(unfinished_packs) == 0:
+    pod_update = update_item('pods', ['complete=1'], ["pods.id=%i" % pod_id])
+    return True
+  else:
+    return False
+
+def calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count):
+  base_rating = card['rating'] if card['rating'] else 0
+  cmc = card['cmc']
+  cmc_size = deck_cards_cmc_count[str(cmc)] if str(cmc) in deck_cards_cmc_count else 0
+  symbols = re.findall(r'\{.+\}', card['mana_cost'])
+  colors = card['colors']
+  deck_card_count = sum(deck_cards_cmc_count.values())
+  cast_rating = 20 / (len(colors) + len(symbols) + cmc + 1)
+  color_rating = 0
+  for color in colors:
+    color_rating += (50 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
+  color_rating = color_rating / len(colors) if colors else 5
+  curve_rating = ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
+  return {'overall_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
+
+def add_ratings_to_pack_cards(pack_cards, deck_cards_color_count, deck_cards_cmc_count):
+  card_ids = [pack_card['card_id'] for pack_card in pack_cards]
+  cards = select_items('cards', ["cards.id in (%s)" % ",".join(list(map(str, card_ids)))])
+  ratings = {card['id']: calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count) for card in cards}
+  pack_cards = [dict(ratings[pack_card['card_id']], **pack_card) for pack_card in pack_cards]
+  return pack_cards
