@@ -110,12 +110,17 @@ def calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count):
   symbols = re.findall(r'\{.+\}', card['mana_cost'])
   colors = card['colors']
   deck_card_count = sum(deck_cards_cmc_count.values())
-  cast_rating = 50 / (len(colors) + len(symbols)**2 + cmc**2 + 5)
+  cast_rating = 0
   color_rating = 0
-  for color in colors:
-    color_rating += (50 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
-  color_rating = color_rating / len(colors) if colors else 5
-  curve_rating = 5 * ((deck_card_count + 1) / (cmc_size + 1)) / (abs(cmc - 2)**1.5 + 5)
+  curve_rating = 0
+  if card['types'] != ['Land']:
+    cast_rating = 50 / (len(colors) + len(symbols)**2 + cmc**2 + 5)
+    if sorted(deck_cards_color_count.values(), reverse=True)[0] > 2 and sorted(deck_cards_color_count.values(), reverse=True)[1] > 2:
+      for color in colors:
+        color_rating += (50 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
+      color_rating = color_rating / len(colors) if colors else 5
+    if deck_card_count > 8:
+      curve_rating = 5 * ((deck_card_count + 1) / (cmc_size + 1)) / (abs(cmc - 2)**1.5 + 5)
   return {'overall_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
 
 def add_ratings_to_pack_cards(pack_cards, deck_cards_color_count, deck_cards_cmc_count):
