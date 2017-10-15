@@ -115,7 +115,7 @@ def calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count):
   for color in colors:
     color_rating += (50 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
   color_rating = color_rating / len(colors) if colors else 5
-  curve_rating = 5 * ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
+  curve_rating = 5 * ((deck_card_count + 1) / (cmc_size + 1)) / (abs(cmc - 2)**1.5 + 5)
   return {'overall_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
 
 def add_ratings_to_pack_cards(pack_cards, deck_cards_color_count, deck_cards_cmc_count):
