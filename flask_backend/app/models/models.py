@@ -13,8 +13,6 @@ def insert_item(model, data):
     cur = con.cursor()
     fields = ','.join(list(data.keys()))
     values = ','.join(str(v) for v in list(data.values()))
-    #if model=='cards':
-      #pdb.set_trace()
     cur.execute("INSERT INTO %s (%s) VALUES (%s)" % (model, fields, ','.join('?' * len(data.values()))), list(data.values()))
     result = {'id': cur.lastrowid}
     result.update(data)
@@ -112,12 +110,12 @@ def calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count):
   symbols = re.findall(r'\{.+\}', card['mana_cost'])
   colors = card['colors']
   deck_card_count = sum(deck_cards_cmc_count.values())
-  cast_rating = 20 / (len(colors) + len(symbols) + cmc + 1)
+  cast_rating = 50 / (len(colors) + len(symbols)**2 + cmc**2 + 5)
   color_rating = 0
   for color in colors:
     color_rating += (50 * deck_cards_color_count[color.lower()] / (deck_card_count + 10) )
   color_rating = color_rating / len(colors) if colors else 5
-  curve_rating = ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
+  curve_rating = 5 * ((deck_card_count + 1) / (cmc_size + 1)) / ((cmc - 2)**2 + 1)
   return {'overall_rating': base_rating + cast_rating + color_rating + curve_rating, 'base_rating': base_rating, 'cast_rating': cast_rating, 'color_rating': color_rating, 'curve_rating': curve_rating}
 
 def add_ratings_to_pack_cards(pack_cards, deck_cards_color_count, deck_cards_cmc_count):

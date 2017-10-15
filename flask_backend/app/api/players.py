@@ -82,7 +82,7 @@ def get_player_pack_by_hash(player_hash):
         deck_stats = Deck.get_stats(0, deck_cards)
         pack_cards = [dict({'deck_id': None, 'pack_id': 0, 'pick_id': None, 'image_url': "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%i&type=card" % card['multiverse_id'], 'card_id': card['id']}, **card) for card in cards]
         player = {'hash': player_hash, 'name': player_hash, 'id': 0, 'pod_id': 0}
-        pack = {'id': 0, 'player_id': 0, 'number': 0}
+        pack = {'id': 0, 'player_id': 0, 'number': 1}
         pod = {'id': 0, 'name': player_hash}
     else:
         player = Player.get_player_by_hash(player_hash)
@@ -137,7 +137,7 @@ def update_deck_card():
 
 @players.route('/<player_hash>/card_images', methods=['GET'])
 def get_player_card_images_by_hash(player_hash):
-    if player_hash in ['test1']:
+    if player_hash in ['test1', 'test2']:
       card_image_urls = []
     else:
       player = Player.get_player_by_hash(player_hash)
