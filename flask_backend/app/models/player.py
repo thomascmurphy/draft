@@ -14,22 +14,12 @@ class Player():
       return players
 
     @staticmethod
-    def get_player_by_hash(hash, pin=None):
+    def get_player_by_hash(hash):
       #cipher = AES.new(current_app.config['PLAYER_HASH_KEY'])
       #hash = base64.encodestring(cipher.encrypt("%016d"%id))
       #id = int(cipher.decrypt(base64.decodestring(hash)))
       email = base64.b64decode(hash)
-      user = select_first_item('users', ["hash='%s'" % hash])
       player = select_first_item('players', ["hash='%s'" % hash])
-      if pin != 'test':
-        if user:
-          if not user['pin'] and pin:
-            user_update = update_item('users', ['pin=%i' % pin], ['id=%i' % user['id']])
-          elif user['pin'] and pin != user['pin']:
-            player = None
-        else:
-          user_create = insert_item('users', {'email': email, 'pin': pin})
-
       return player
 
     @staticmethod
