@@ -33,6 +33,13 @@ create table pods (
   complete boolean default 0
 );
 
+drop table if exists users;
+create table users (
+  id integer primary key autoincrement,
+  email text not null,
+  pin text
+);
+
 drop table if exists players;
 create table players (
   id integer primary key autoincrement,
