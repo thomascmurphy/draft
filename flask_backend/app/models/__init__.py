@@ -5,3 +5,4 @@ from .pack_card import PackCard
 from .pack import Pack
 from .player import Player
 from .pod import Pod
+from .user import User

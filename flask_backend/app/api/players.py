@@ -3,7 +3,7 @@
 """
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, jsonify, make_response)
-from ..models import Player, Pack, Deck, Pod, PackCard, Card
+from ..models import Player, Pack, Deck, Pod, PackCard, Card, User
 import pdb
 import sys
 
@@ -25,16 +25,16 @@ def get_players():
   email = request.args.get('email')
   pin = request.args.get('pin')
   query = []
-  user = select_first_item('users', ["email='%s'" % email])
+  user = User.get_user_by_email(email)
   should_show = True
   if pin != 'test':
     if user:
       if not user['pin'] and pin:
-        user_update = update_item('users', ['pin=%i' % pin], ['id=%i' % user['id']])
+        user_update = User.update_user_by_id(user['id'], pin)
       elif user['pin'] and pin != user['pin']:
         should_show = False
-    else:
-      user_create = insert_item('users', {'email': email, 'pin': pin})
+    elif not user and pin:
+      user_create = User.create_user(email, pin)
 
   if email and should_show:
     query = ["email = '%s'" % email.lower()]
