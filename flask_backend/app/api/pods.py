@@ -28,8 +28,10 @@ def get_pod(pod_id):
   decks = Deck.get_decks(["player_id IN (%s)" % ','.join(list(map(str, player_ids)))])
   packs = Pack.get_packs(["player_id IN (%s)" % ','.join(list(map(str, player_ids)))])
   pack_ids = [pack['id'] for pack in packs]
+  deck_ids = [deck['id'] for deck in decks]
   pack_cards = PackCard.get_pack_cards(["pack_id IN (%s)" % ','.join(list(map(str, pack_ids)))])
-  pack_cards = PackCard.add_card_data_to_pack_cards(pack_cards)
+  land_cards = PackCard.get_pack_cards(["pack_id=0", "deck_id IN (%s)" % ','.join(list(map(str, deck_ids)))])
+  pack_cards = PackCard.add_card_data_to_pack_cards(pack_cards + land_cards)
   return jsonify({'pod': pod, 'players': players, 'packs': packs, 'decks': decks, 'pack_cards': pack_cards}), 201
 
 @pods.route('', methods=['POST'])
