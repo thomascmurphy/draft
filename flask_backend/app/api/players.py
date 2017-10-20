@@ -147,6 +147,24 @@ def update_deck_card():
     deck_card_with_data = PackCard.add_card_data_to_pack_cards([deck_card])[0]
   return jsonify({'deck_card': deck_card_with_data}), 201
 
+@players.route('/add_lands', methods=['POST'])
+def add_lands():
+  player_id = int(request.json['player_id'])
+  deck_id = int(request.json['deck_id'])
+  deck = Deck.get_deck_by_id(deck_id)
+  lands_json = request.json['lands']
+  if deck['player_id'] == player_id:
+    deck_cards = Deck.get_cards(deck['id'])
+    set_card = Card.get_card_by_id(deck_cards[0]['card_id'])
+    set_code = set_card['set_code']
+    for key, value in lands_json.items():
+      if value > 0:
+        land = Card.get_random_card(["name='%s'" % key, "set_code='%s'" % set_code])
+        for _ in range(value):
+          PackCard.create_pack_card(land['id'], 0, deck_id=deck_id, pick_number=99, sideboard=0)
+  deck_cards = Deck.get_cards(deck['id']) if deck else []
+  return jsonify({'deck_cards': deck_cards}), 201
+
 @players.route('/<player_hash>/card_images', methods=['GET'])
 def get_player_card_images_by_hash(player_hash):
   if player_hash in ['test1', 'test2']:
