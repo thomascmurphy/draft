@@ -32,7 +32,7 @@ class Player():
       hash_components = "%i%s" % (pod_id, email)
       player_hash = base64.b64encode(hash_components.encode())
       player_hash_string = player_hash.decode('utf-8')
-      player = insert_item('players', {'email': email, 'name': name, 'is_bot': is_bot, 'pod_id': pod_id, 'hash': player_hash_string})
+      player = insert_item('players', {'email': email, 'name': name, 'is_bot': is_bot, 'pod_id': pod_id, 'hash': player_hash_string, 'is_owner': is_owner})
       deck = Deck.create_deck(player['id'])
       return player
 
