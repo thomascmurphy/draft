@@ -17,7 +17,7 @@ class Pod():
     @staticmethod
     def get_pod_by_id_with_players(id):
         pod = Pod.get_pod_by_id(id)
-        players = Player.get_players(["id in (%s)" % ",".join(list(map(str, pod['player_ids'])))])
+        players = Player.get_players(["id in (%s)" % ",".join(list(map(str, pod['player_ids'])))], associations=['table': 'packs', 'join_name': 'pack', 'model': 'pack', 'join_field_left': 'id', 'join_field_right': 'player_id', 'join_filter': 'AND pack.open=1 AND pack.complete=0'}], group_by='players.id')
         pod['players'] = players
         return pod
 

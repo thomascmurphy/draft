@@ -9,8 +9,8 @@ from .pack_card import PackCard
 class Player():
     #methods
     @staticmethod
-    def get_players(params):
-      players = select_items('players', params)
+    def get_players(params, associations=[], group_by=''):
+      players = select_items('players', params, associations, group_by)
       return players
 
     @staticmethod
