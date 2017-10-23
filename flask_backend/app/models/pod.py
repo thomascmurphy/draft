@@ -15,6 +15,13 @@ class Pod():
         return pod
 
     @staticmethod
+    def get_pod_by_id_with_players(id):
+        pod = Pod.get_pod_by_id(id)
+        players = Player.get_players(["id in (%s)" % ",".join(list(map(str, pod['player_ids'])))])
+        pod['players'] = players
+        return pod
+
+    @staticmethod
     def create_pod(name, pack_1_set, pack_2_set, pack_3_set, players):
         pod = insert_item('pods', {'name': name, 'pack_1_set': pack_1_set, 'pack_2_set': pack_2_set, 'pack_3_set': pack_3_set})
         packs_array = [pack_1_set, pack_2_set, pack_3_set]

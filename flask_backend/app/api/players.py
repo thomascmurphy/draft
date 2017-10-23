@@ -100,7 +100,7 @@ def get_player_pack_by_hash(player_hash):
     player = Player.get_player_by_hash(player_hash)
     pack = Player.get_player_pack(player['id'])
     pack_cards = Pack.get_all_cards(pack['id']) if pack else []
-    pod = Pod.get_pod_by_id(player['pod_id'])
+    pod = Pod.get_pod_by_id_with_players(player['pod_id'])
     deck = Player.get_player_deck(player['id'])
     deck_stats = Deck.get_stats(deck['id'])
   pack_cards = PackCard.add_ratings(pack_cards, deck_stats['deck_cards_color_count'], deck_stats['deck_cards_cmc_count'])
@@ -122,7 +122,8 @@ def create_pick():
   player = Player.get_player_by_id(player_id)
   pod = Pod.get_pod_by_id(player['pod_id'])
   player_ids = pod['player_ids']
-  next_player_id = player_ids[(player_ids.index(player['id']) + 1)%len(player_ids)]
+  next_player_modifier = -1 if pack['number'] == 2 else 1
+  next_player_id = player_ids[(player_ids.index(player['id']) + next_player_modifier)%len(player_ids)]
   next_player = Player.get_player_by_id(next_player_id)
   deck = Deck.get_deck_by_player_id(player['id'])
   #pick_number = Pack.get_pick_number(Pack.get_all_cards(pack['id']))
