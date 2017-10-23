@@ -33,7 +33,7 @@ def get_players():
         user_update = User.update_user_by_id(user['id'], pin)
       elif user['pin'] and pin != user['pin']:
         should_show = False
-    elif not user and pin:
+    elif not user and pin and pin != 'undefined':
       user_create = User.create_user(email, pin)
 
   if email and should_show:
