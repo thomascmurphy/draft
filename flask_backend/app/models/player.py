@@ -10,7 +10,7 @@ class Player():
     #methods
     @staticmethod
     def get_players(params, associations=[], group_by=''):
-      players = select_items('players', params, associations, group_by)
+      players = select_items('players', params, associations=associations, group_by=group_by)
       return players
 
     @staticmethod

@@ -47,7 +47,7 @@ def select_items(model, params=[], order=[], select=[], associations=[], group_b
       query += " ORDER BY " + ', '.join(order)
     if limit != '':
       query += " LIMIT %i" % limit
-    #print(query, file=sys.stderr)
+    print(query, file=sys.stderr)
     result = cur.execute(query).fetchall()
     columns = [column[0] for column in cur.description]
     pretty_results = []

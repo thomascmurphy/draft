@@ -29,7 +29,7 @@ def get_players():
   should_show = True
   if pin != 'test':
     if user:
-      if not user['pin'] and pin:
+      if not user['pin'] and pin and pin != 'undefined':
         user_update = User.update_user_by_id(user['id'], pin)
       elif user['pin'] and pin != user['pin']:
         should_show = False
