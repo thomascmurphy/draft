@@ -84,9 +84,23 @@ class Player():
         pick = sorted(pack_cards, key=lambda pack_cards: -pack_cards['overall_rating'])[0]
         pod = select_item_by_id('pods', player['pod_id'], associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
         player_ids = pod['player_ids']
-        next_player_id = player_ids[(player_ids.index(player['id']) + 1)%len(player_ids)]
+        next_player_modifier = -1 if pack['number'] == 2 else 1
+        next_player_id = player_ids[(player_ids.index(player['id']) + next_player_modifier)%len(player_ids)]
         next_player = Player.get_player_by_id(next_player_id)
         pick_number = deck_stats['deck_cards_count'] + 1
         return Player.pick_pack_card(pick['id'], deck['id'], player['id'], next_player, pick_number, pack['player_id'], pod['id'])
       else:
         return False
+
+    @staticmethod
+    def auto_build_deck(player):
+      deck = Player.get_player_deck(player['id'])
+      deck_stats = Deck.get_stats(deck['id'])
+      deck_cards = add_ratings_to_pack_cards(select_items('pack_cards', ["deck_id=%i" % deck['id']]), deck_stats['deck_cards_color_count'], deck_stats['deck_cards_cmc_count'])
+      viable_colors = [color for color,count in enumerate(deck_stats['deck_cards_color_count']) if count > 4]
+      viable_cards = [deck_card for deck_card in deck_cards if deck_card['colors'] == [] or len(list(filter(lambda x: x in [color.lower() for color in deck_card['colors']], viable_colors))) > 0]
+      picks = sorted(viable_cards, key=lambda viable_cards: -viable_cards['overall_rating'])[:23]
+      pick_ids = [pick['id'] for pick in picks]
+      pick_updates = update_item('pack_cards', ['sideboard=0'], ["id in (%s)" % ",".join(list(map(str, pick_ids)))])
+      nonland_picks = [pick for pick in picks if pick['types'] != ["Land"]]
+      return True
