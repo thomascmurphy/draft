@@ -29,7 +29,8 @@ class Player():
 
     @staticmethod
     def create_player(email, name, is_bot, is_owner, pod_id):
-      hash_components = "%i%s" % (pod_id, email)
+      player_identifier = email if not is_bot else name
+      hash_components = "%i%s" % (pod_id, player_identifier)
       player_hash = base64.b64encode(hash_components.encode())
       player_hash_string = player_hash.decode('utf-8')
       player = insert_item('players', {'email': email, 'name': name, 'is_bot': is_bot, 'pod_id': pod_id, 'hash': player_hash_string, 'is_owner': is_owner})
