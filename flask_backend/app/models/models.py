@@ -103,6 +103,19 @@ def check_pod_completion(pod_id):
   else:
     return False
 
+def check_all_packs_completion(pod_id, pack_number):
+  pod = select_item_by_id('pods', pod_id, associations=[{'table': 'players', 'model': 'player', 'join_name': 'player', 'join_field_left': 'id', 'join_field_right': 'pod_id', 'join_filter': ''}])
+  player_ids = pod['player_ids']
+  unfinished_packs = select_items('packs', ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), "complete=0", "number=%i" % pack_number])
+  if len(unfinished_packs) == 0:
+    if pack_number < 3:
+      next_pack = update_item('packs', ['open=1'], ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), 'packs.number=%i' % (pack_number + 1)])
+    else:
+      check_pod_completion(pod_id)
+    return True
+  else:
+    return False
+
 def calculate_card_rating(card, deck_cards_color_count, deck_cards_cmc_count):
   base_rating = card['rating'] if card['rating'] else 0
   cmc = card['cmc']

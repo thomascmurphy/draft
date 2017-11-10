@@ -66,10 +66,7 @@ class Player():
         update = update_item('packs', ['player_id=%i' % next_player['id'], 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
         if pack_complete:
           pack = select_item_by_id('packs', pack_card['pack_id'])
-          if pack['number'] < 3:
-            next_pack = update_item('packs', ['open=1'], ['packs.player_id=%i' % player_id, 'packs.number=%i' % (pack['number'] + 1)])
-          else:
-            pod = check_pod_completion(pod_id)
+          crack_next_packs = check_all_packs_completion(pod_id, pack['number'])
         if next_player['is_bot']:
           Player.auto_pick_card(next_player)
         return pack_card
