@@ -67,7 +67,11 @@ class Player():
         if pack_complete:
           pack = select_item_by_id('packs', pack_card['pack_id'])
           crack_next_packs = check_all_packs_completion(pod_id, pack['number'])
-        if next_player['is_bot']:
+          if pack['number'] < 3:
+            bot_players = select_items('players', ["players.pod_id = %i" % pod_id, "is_bot=1"])
+            for bot_player in bot_players:
+              Player.auto_pick_card(bot_player)
+        elif next_player['is_bot']:
           Player.auto_pick_card(next_player)
         return pack_card
 

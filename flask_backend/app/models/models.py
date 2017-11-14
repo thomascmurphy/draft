@@ -109,7 +109,7 @@ def check_all_packs_completion(pod_id, pack_number):
   unfinished_packs = select_items('packs', ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), "complete=0", "number=%i" % pack_number])
   if len(unfinished_packs) == 0:
     if pack_number < 3:
-      next_pack = update_item('packs', ['open=1'], ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), 'packs.number=%i' % (pack_number + 1)])
+      next_packs = update_item('packs', ['open=1'], ["packs.player_id in (%s)" % ",".join(list(map(str, player_ids))), 'packs.number=%i' % (pack_number + 1)])
     else:
       check_pod_completion(pod_id)
     return True
