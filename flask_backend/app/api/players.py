@@ -160,7 +160,7 @@ def add_lands():
     set_code = set_card['set_code']
     for key, value in lands_json.items():
       if value > 0:
-        land = Card.get_random_card(["name='%s'" % key, "set_code='%s'" % set_code])
+        land = Card.get_random_card(["name='%s'" % key, "set_code='%s'" % set_code]) or Card.get_random_card(["name='%s'" % key])
         for _ in range(value):
           PackCard.create_pack_card(land['id'], 0, deck_id=deck_id, pick_number=99, sideboard=0)
   deck_cards = Deck.get_cards(deck['id']) if deck else []

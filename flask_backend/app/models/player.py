@@ -63,7 +63,7 @@ class Player():
         pack_card = select_first_item('pack_cards', ["pack_cards.id=%i" % pack_card_id])
         remaining_cards = select_items('pack_cards', ['pack_id=%i' % pack_card['pack_id'], 'deck_id IS NULL'])
         pack_complete = 0 if len(remaining_cards) > 0 else 1
-        update = update_item('packs', ['player_id=%i' % next_player['id'], 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
+        update = update_item('packs', ['player_id=%i' % (player_id if pack_complete else next_player['id']), 'complete=%i' % pack_complete], ['packs.id=%i' % pack_card['pack_id']])
         if pack_complete:
           pack = select_item_by_id('packs', pack_card['pack_id'])
           crack_next_packs = check_all_packs_completion(pod_id, pack['number'])
