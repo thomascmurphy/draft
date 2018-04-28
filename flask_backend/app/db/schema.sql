@@ -30,7 +30,7 @@ create table pods (
   pack_1_set text,
   pack_2_set text,
   pack_3_set text,
-  owner_id integer
+  owner_id integer,
   complete boolean default 0
 );
 
@@ -48,6 +48,7 @@ create table players (
   email text not null,
   pod_id integer references pods on delete cascade,
   hash text,
+  is_owner boolean default 0,
   is_bot boolean default 0
 );
 

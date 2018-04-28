@@ -47,7 +47,7 @@ def transfer_ratings():
   card_ratings = select_items('card_ratings', [])
   cards = select_items('cards', [])
   for card in cards:
-    ratings = [float(card_rating['Rating']) for card_rating in card_ratings if card_rating['Name'] == card['name'] and card_rating['Set_Code'] == card['set_code']]
+    ratings = [float(card_rating['rating']) for card_rating in card_ratings if card_rating['name'] == card['name'] and card_rating['set_code'] == card['set_code']]
     if ratings and ratings[0]:
       card_update = update_item('cards', ["rating=%i" % int(ratings[0] * 10)], ["id=%i" % card['id']])
   return jsonify({'cards': cards}), 201
