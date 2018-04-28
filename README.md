@@ -7,6 +7,7 @@ $ source .pyenv/bin/activate
 $ pip install Flask
 $ pip freeze > requirements.txt
 $ cat requirements.txt
+$ python run.py
 
 
 
@@ -26,3 +27,17 @@ frontend:
 
 
 frontend: npm install and npm start
+
+
+download prod db
+download latest mtgjson
+add set to models/set
+run app
+localhost:5000/api/v1/sets/seed
+delete the non-rated cards that might reappear
+get draftsim ratings
+find/replace _
+export to csv
+delete/import card_ratings
+localhost:5000/api/v1/sets/transfer_ratings
+delete non-rated non-basics

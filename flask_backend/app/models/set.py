@@ -61,22 +61,23 @@ class Set():
     return cards
 
   @staticmethod
-  def seed_data():
+  def seed_data(reseed=False):
     with open('AllSets.json') as sets_file:
       set_data = json.load(sets_file)
-    Set.seed_sets(set_data)
+    Set.seed_sets(set_data, reseed)
     sets = Set.get_sets([])
     return sets
 
   @staticmethod
-  def seed_sets(set_data):
-    included_sets = ["MM3", "AKH", "HOU", "XLN", "IMA"]
+  def seed_sets(set_data, reseed=False):
+    included_sets = ["MM3", "AKH", "HOU", "XLN", "IMA", "RIX", "A25", "DOM"]
     for set_code, set in set_data.items():
       existing_sets = Set.get_sets(["code='%s'" % set_code])
       if set['code'] in included_sets:
         if not existing_sets:
           new_set = Set.create_set(set['name'], set_code, json.dumps(set['booster']), set['releaseDate'], len(set['cards']))
-        Set.seed_cards(set['code'], set['cards'])
+        if not existing_sets or reseed:
+          Set.seed_cards(set['code'], set['cards'])
 
   # @staticmethod
   # def seed_lands(set_data):

@@ -21,11 +21,12 @@ def get_sets():
   result_json = sorted(sets, key=lambda set: set['release_date'], reverse=True)
   return jsonify({'sets': result_json}), 201
 
-# @sets.route('/seed', methods=['GET'])
-# def seed_sets():
-#   sets = Set.seed_data()
-#   return jsonify({'sets': sets}), 201
-#
+@sets.route('/seed', methods=['GET'])
+def seed_sets():
+  reseed = request.args.get('reseed')
+  sets = Set.seed_data(reseed)
+  return jsonify({'sets': sets}), 201
+
 @sets.route('/<set_code>/booster', methods=['GET'])
 def booster(set_code):
   cards = Set.generate_booster(set_code)
@@ -41,12 +42,12 @@ def booster(set_code):
 #     new_pack_card = PackCard.update_pack_card_by_id(int(old_pack_card['id']), updates)
 #   return jsonify({'cards': cards}), 201
 
-# @sets.route('/transfer_ratings', methods=['GET'])
-# def transfer_ratings():
-#   card_ratings = select_items('card_ratings', [])
-#   cards = select_items('cards', [])
-#   for card in cards:
-#     ratings = [float(card_rating['Rating']) for card_rating in card_ratings if card_rating['Name'] == card['name']]
-#     if ratings and ratings[0]:
-#       card_update = update_item('cards', ["rating=%i" % int(ratings[0] * 10)], ["id=%i" % card['id']])
-#   return jsonify({'cards': cards}), 201
+@sets.route('/transfer_ratings', methods=['GET'])
+def transfer_ratings():
+  card_ratings = select_items('card_ratings', [])
+  cards = select_items('cards', [])
+  for card in cards:
+    ratings = [float(card_rating['Rating']) for card_rating in card_ratings if card_rating['Name'] == card['name'] and card_rating['Set_Code'] == card['set_code']]
+    if ratings and ratings[0]:
+      card_update = update_item('cards', ["rating=%i" % int(ratings[0] * 10)], ["id=%i" % card['id']])
+  return jsonify({'cards': cards}), 201
